@@ -6,6 +6,8 @@
 #include "tinyxml2.h"
 #include "paramset.h"
 #include "scene_xml_params.h"
+#include "api.h"
+#include "rt3.h"
 
 using namespace std;
 using namespace tinyxml2;
@@ -18,6 +20,7 @@ class Parser {
     public:
         Parser(string mSceneFile) : sceneFile(mSceneFile) {}
         bool parseSceneFile();
+        void loadScene(RT3 & rayTracer);
 };
 
 bool Parser::parseSceneFile() {
@@ -31,21 +34,24 @@ bool Parser::parseSceneFile() {
     doc.Print(&printer);
 
     processTag(doc.FirstChildElement());
-    return false;
+    return true;
 }
 
 void Parser::processTag(XMLElement * currentNode) {
     if (currentNode == nullptr) {
         return;
     }
-    
+
     string tag = currentNode->Value();
+    cout << tag << "\n";
     unique_ptr<ParamSet> currentParamSet{ new ParamSet() };
 
     if (tag == SceneTags::CAMERA) {
         unique_ptr<string[]> type{ new string[1] };
         type[0] = currentNode->Attribute(CameraParams::TYPE.c_str());
         currentParamSet->add<string>(CameraParams::TYPE, move(type), 1);
+
+        API::setCamera(*currentParamSet);
     } else if (tag == SceneTags::FILM) {
         unique_ptr<string[]> type{ new string[1] };
         type[0] = currentNode->Attribute(FilmParams::TYPE.c_str());
@@ -66,42 +72,62 @@ void Parser::processTag(XMLElement * currentNode) {
         unique_ptr<string[]> imageType{ new string[1] };
         imageType[0] = currentNode->Attribute(FilmParams::IMG_TYPE.c_str());
         currentParamSet->add<string>(FilmParams::IMG_TYPE, move(imageType), 1);
+
+        API::setFilm(*currentParamSet);
     } else if (tag == SceneTags::BACKGROUND) {
         unique_ptr<string[]> type{ new string[1] };
         type[0] = currentNode->Attribute(BackgroundParams::TYPE.c_str());
         currentParamSet->add<string>(BackgroundParams::TYPE, move(type), 1);
 
-        string colorValuesString = currentNode->Attribute(BackgroundParams::COLOR.c_str());
-        unique_ptr<int[]> colorArray( new int[3] );
-        fillArrayWithValuesFromString<int>(colorValuesString, colorArray, 3);
-        currentParamSet->add<int>(BackgroundParams::COLOR, move(colorArray), 3);
+        if (currentNode->Attribute(BackgroundParams::COLOR.c_str()) != nullptr) {
+            string colorValuesString = currentNode->Attribute(BackgroundParams::COLOR.c_str());
+            unique_ptr<int[]> colorArray( new int[3] );
+            fillArrayWithValuesFromString<int>(colorValuesString, colorArray, 3);
+            currentParamSet->add<int>(BackgroundParams::COLOR, move(colorArray), 3);
+        }
 
-        unique_ptr<string[]> mapping{ new string[1] };
-        mapping[0] = currentNode->Attribute(BackgroundParams::MAPPING.c_str());
-        currentParamSet->add<string>(BackgroundParams::MAPPING, move(mapping), 1);
+        if (currentNode->Attribute(BackgroundParams::MAPPING.c_str())) {
+            unique_ptr<string[]> mapping{ new string[1] };
+            mapping[0] = currentNode->Attribute(BackgroundParams::MAPPING.c_str());
+            currentParamSet->add<string>(BackgroundParams::MAPPING, move(mapping), 1);
+        }
 
-        string bottomLeftColorsString = currentNode->Attribute(BackgroundParams::BOTTOM_LEFT.c_str());
-        unique_ptr<int[]> bottomLeftColorsArray( new int[3] );
-        fillArrayWithValuesFromString<int>(bottomLeftColorsString, bottomLeftColorsArray, 3);
-        currentParamSet->add<int>(BackgroundParams::BOTTOM_LEFT, move(bottomLeftColorsArray), 3);
+        if (currentNode->Attribute(BackgroundParams::BOTTOM_LEFT.c_str())) {
+            string bottomLeftColorsString = currentNode->Attribute(BackgroundParams::BOTTOM_LEFT.c_str());
+            unique_ptr<int[]> bottomLeftColorsArray( new int[3] );
+            fillArrayWithValuesFromString<int>(bottomLeftColorsString, bottomLeftColorsArray, 3);
+            currentParamSet->add<int>(BackgroundParams::BOTTOM_LEFT, move(bottomLeftColorsArray), 3);
+        }
 
-        string topLeftColorsString = currentNode->Attribute(BackgroundParams::TOP_LEFT.c_str());
-        unique_ptr<int[]> topLeftColorsArray( new int[3] );
-        fillArrayWithValuesFromString<int>(topLeftColorsString, topLeftColorsArray, 3);
-        currentParamSet->add<int>(BackgroundParams::TOP_LEFT, move(topLeftColorsArray), 3);
+        if (currentNode->Attribute(BackgroundParams::TOP_LEFT.c_str())) {
+            string topLeftColorsString = currentNode->Attribute(BackgroundParams::TOP_LEFT.c_str());
+            unique_ptr<int[]> topLeftColorsArray( new int[3] );
+            fillArrayWithValuesFromString<int>(topLeftColorsString, topLeftColorsArray, 3);
+            currentParamSet->add<int>(BackgroundParams::TOP_LEFT, move(topLeftColorsArray), 3);
+        }
 
-        string topRightColorsString = currentNode->Attribute(BackgroundParams::TOP_RIGHT.c_str());
-        unique_ptr<int[]> topRightColorsArray( new int[3] );
-        fillArrayWithValuesFromString<int>(topRightColorsString, topRightColorsArray, 3);
-        currentParamSet->add<int>(BackgroundParams::TOP_RIGHT, move(topRightColorsArray), 3);
+        if (currentNode->Attribute(BackgroundParams::TOP_RIGHT.c_str())) {
+            string topRightColorsString = currentNode->Attribute(BackgroundParams::TOP_RIGHT.c_str());
+            unique_ptr<int[]> topRightColorsArray( new int[3] );
+            fillArrayWithValuesFromString<int>(topRightColorsString, topRightColorsArray, 3);
+            currentParamSet->add<int>(BackgroundParams::TOP_RIGHT, move(topRightColorsArray), 3);
+        }
 
-        string bottomRightColorsString = currentNode->Attribute(BackgroundParams::BOTTOM_RIGHT.c_str());
-        unique_ptr<int[]> bottomRightColorsArray( new int[3] );
-        fillArrayWithValuesFromString<int>(bottomRightColorsString, bottomRightColorsArray, 3);
-        currentParamSet->add<int>(BackgroundParams::BOTTOM_RIGHT, move(bottomRightColorsArray), 3);
+        if (currentNode->Attribute(BackgroundParams::BOTTOM_RIGHT.c_str())) {
+            string bottomRightColorsString = currentNode->Attribute(BackgroundParams::BOTTOM_RIGHT.c_str());
+            unique_ptr<int[]> bottomRightColorsArray( new int[3] );
+            fillArrayWithValuesFromString<int>(bottomRightColorsString, bottomRightColorsArray, 3);
+            currentParamSet->add<int>(BackgroundParams::BOTTOM_RIGHT, move(bottomRightColorsArray), 3);
+        }
+
+        API::setBackground(*currentParamSet);
     }
     processTag(currentNode->FirstChildElement());
     processTag(currentNode->NextSiblingElement());
+}
+
+void Parser::loadScene(RT3 & rayTracer) {
+    API::setRayTracer(rayTracer);
 }
 
 template <typename T>
