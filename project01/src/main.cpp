@@ -2,20 +2,23 @@
 #include <iostream>
 #include <memory>
 #include "paramset.h"
+#include "parser.h"
 
 using namespace tinyxml2;
 using namespace std;
 
-int main() {
-    ParamSet paramSet = ParamSet();
-    std::unique_ptr<int[]> value{ new int[1] };
-    value[0] = 10;
-    value[1] = 20;
-    value[2] = 30;
-    paramSet.add("teste", move(value), 1);
-    auto resultOne = paramSet.find<int>("teste", 0);
-    cout << resultOne << "\n";
-    auto resultArray = paramSet.findArray<int>("teste");
-    cout << resultArray[0] << " " << resultArray[1] << " " << resultArray[2] << "\n";
+int main(int argc, char** argv) {
+
+    if (argc > 1) {
+        string sceneFile = argv[1];
+        Parser parser = Parser(sceneFile);
+        if (!parser.parseSceneFile()) {
+            return EXIT_FAILURE;
+        }
+    } else {
+        cout << ">>> You must provide a scene description file!" << endl;
+        return EXIT_FAILURE;
+    }
+    return EXIT_SUCCESS;
     return 0;
 }

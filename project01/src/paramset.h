@@ -24,11 +24,12 @@ ParamSet::ParamSet() {
 
 template <typename T> 
 void ParamSet::add(const string &key, unique_ptr<T[]> value, size_t size) {
+    if (value == nullptr) { return; }
     shared_ptr<ParamSetItem<T>> item(new ParamSetItem<T>(move(value), size));
     params[key] = item;
 }
 
-template <typename T> 
+template <typename T>
 const T& ParamSet::find(const string &key, const T& defaultValue) {
     auto result = params.find(key);
     if (result == params.end()) {
