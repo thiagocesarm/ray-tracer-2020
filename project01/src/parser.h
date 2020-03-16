@@ -43,7 +43,6 @@ void Parser::processTag(XMLElement * currentNode) {
     }
 
     string tag = currentNode->Value();
-    cout << tag << "\n";
     unique_ptr<ParamSet> currentParamSet{ new ParamSet() };
 
     if (tag == SceneTags::CAMERA) {
