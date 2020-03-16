@@ -4,7 +4,9 @@
 #include <fstream>
 #include <iostream>
 #include <memory>
+#include <vector>
 #include "color.h"
+#include "lodepng.h"
 
 using namespace std;
 
@@ -24,6 +26,7 @@ class Film {
         bool isValidCoordinate(int, int);
         void drawPixel(int, int, Color);
         void printToFile();
+        void printToPngFile();
 };
 
 Film::Film(string mType, int xRes, int yRes, string mFilename, string mImgType) {
@@ -57,19 +60,34 @@ void Film::drawPixel(int i, int j, Color color) {
 }
 
 void Film::printToFile() {
-    std::ofstream outfile;
-    outfile.open(filename);
-    outfile << "P3" << std::endl;
-    outfile << width << " " << height << std::endl;
-    outfile << "255" << std::endl;
-    auto line_end = width*3;
-    for (auto i = 0; i < (height*width); ++i) {
-        outfile << int(pixels[i].r()) << " ";
-        outfile << int(pixels[i].g()) << " ";
-        outfile << int(pixels[i].b()) << " ";
-        if (i % line_end == line_end - 1) { outfile << std::endl; }  
+    if (imgType == "ppm") {
+        std::ofstream outfile;
+        outfile.open(filename);
+        outfile << "P3" << std::endl;
+        outfile << width << " " << height << std::endl;
+        outfile << "255" << std::endl;
+        auto line_end = width*3;
+        for (auto i = 0; i < (height*width); ++i) {
+            outfile << int(pixels[i].r()) << " ";
+            outfile << int(pixels[i].g()) << " ";
+            outfile << int(pixels[i].b()) << " ";
+            if (i % line_end == line_end - 1) { outfile << std::endl; }  
+        }
+        outfile.close();
+    } else if (imgType == "png") {
+        vector<unsigned char> pngVector;
+        for(auto i = 0; i < width * height; i++) {
+            pngVector.push_back(pixels[i].r());
+            pngVector.push_back(pixels[i].g());
+            pngVector.push_back(pixels[i].b());
+            pngVector.push_back(255);
+        }
+
+        unsigned error = lodepng::encode(filename, pngVector, width, height);
+        if (error) {
+            cout << ">>> Could not encode PNG image. Error " << error << ": " << lodepng_error_text(error) << endl;
+        }
     }
-    outfile.close();
 }
 
 #endif
