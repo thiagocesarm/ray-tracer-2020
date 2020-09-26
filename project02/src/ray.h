@@ -8,10 +8,10 @@
 class Ray {
     public:
         Ray (const Point3D& origin, const Vec3& direction ) : origin{origin}, direction{direction} {/*empty*/}
-        Vec3 getVector() const {return direction;}
-        Point3D getPoint() const {return origin;}
-        void setVector(Vec3 direction) {this->direction = direction;}
-        void setPoint(Point3D origin) {this->origin = origin;}
+        Vec3 getDirection() const {return direction;}
+        Point3D getOrigin() const {return origin;}
+        void setDirection(Vec3 direction) {this->direction = direction;}
+        void setOrigin(Point3D origin) {this->origin = origin;}
     private:
         Point3D origin; 
         Vec3 direction;

@@ -44,6 +44,7 @@ public:
     inline float length() const { return sqrt(e[0]*e[0] + e[1]*e[1] + e[2]*e[2]); }
     inline float squared_length() const { return e[0]*e[0] + e[1]*e[1] + e[2]*e[2]; }
     inline void make_unit_vector();
+    inline Vec3 normalize();
     
     
     float e[3];
@@ -152,5 +153,9 @@ inline Vec3& Vec3::operator/=(const float t) {
 inline Vec3 unit_vector(Vec3 v) {
     return v / v.length();
 }
+
+inline Vec3 normalize (Vec3 v) { 
+    return v / sqrt(v[0]*v[0] + v[1]*v[1] + v[2]*v[2]);
+} 
 
 #endif

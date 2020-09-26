@@ -6,7 +6,7 @@
 #include <memory>
 #include <vector>
 #include "color.h"
-#include "lodepng.h"
+#include "../include/lodepng.h"
 
 using namespace std;
 

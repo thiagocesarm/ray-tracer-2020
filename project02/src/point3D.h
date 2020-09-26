@@ -20,4 +20,8 @@ class Point3D {
         float getZ() const { return this->z; }
 };
 
+inline Point3D operator-(const Point3D &p1, const Point3D &p2) { return Point3D(p1.getX() - p2.getX(), p1.getY() - p2.getY(), p1.getZ()  - p2.getZ());}
+
+inline Point3D operator+(const Point3D &p1, const Vec3 &v1) { return Point3D(p1.getX() + v1.x(), p1.getY() + v1.y(), p1.getZ()  + v1.z());}
+
 #endif
