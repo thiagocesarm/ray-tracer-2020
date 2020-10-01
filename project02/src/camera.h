@@ -16,8 +16,8 @@ class Camera {
         Camera( Film *f ) : film{ f }
              { /* empty */ }
         Camera(string mType);
-        virtual void generate_ray( float ss, float tt, Ray& ray) const = 0;
-        virtual void generate_ray( int x, int y, Ray& ray) const = 0;
+        Ray generate_ray( float ss, float tt, Ray& ray);
+        Ray generate_ray( int x, int y, Ray& ray);
         std::unique_ptr< Film > film;
         
         Point3D eye{0,0,0};  //!< Camera view point (origin).
