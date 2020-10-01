@@ -4,6 +4,7 @@
 #include "ray.h"
 #include "point3D.h"
 #include "vec3.h"
+#include "film.h"
 
 using namespace std;
 
@@ -12,9 +13,12 @@ class Camera {
         string type;
     public:
         Camera(){};
+        Camera( Film *f ) : film{ f }
+             { /* empty */ }
         Camera(string mType);
         virtual void generate_ray( float ss, float tt, Ray& ray) const = 0;
         virtual void generate_ray( int x, int y, Ray& ray) const = 0;
+        std::unique_ptr< Film > film;
         
         Point3D eye{0,0,0};  //!< Camera view point (origin).
         Vec3 u{0,1,0};   //!< Camera's X local coordinate system.
