@@ -17,7 +17,7 @@ class Camera {
              { /* empty */ }
         Camera(string mType);
         Ray generate_ray( float ss, float tt, Ray& ray);
-        Ray generate_ray( int x, int y, Ray& ray);
+        Ray generate_ray( int x, int y, int width, int height);
         Film *film;
         
         Point3D eye{0,0,0};  //!< Camera view point (origin).
