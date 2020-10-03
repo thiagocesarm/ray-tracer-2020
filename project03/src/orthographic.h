@@ -48,15 +48,19 @@ class OrthographicCamera : public Camera {
                         set_parallel_box( l, r, b, t );
                     };
         
-        Ray generate_ray( int x, int y) const {
+        Ray generate_ray( int x, int y, int width, int height) const {
             // The input coord, (x,y) are expressed in pixel coords, aka **Raster space**.
             // Calculate the normalivez value (u_int,v_int) correspoding to (x,y).
-            float u_int = l + (r-l)*(x+0.5f)/film->getWidth();
-            float v_int = b + (t-b)*(y+0.5)/film->getHeight();
+            float u_int = l + (r-l)*(x+0.5f)/width;
+            float v_int = b + (t-b)*(y+0.5)/height;
             // Determine the ray's origin (point on film) within this new UV coord. system. u_int,v_int in [0,1].
             Ray ray = Ray(eye + u_int*u + v_int*v, vpn);
             // All rays have the same direction.
             return ray;
+        }
+
+        void printParameters(){
+            cout << l << r << b << t << endl;
         }
 
     };
