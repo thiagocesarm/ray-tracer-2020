@@ -1,0 +1,3 @@
+/Users/lairene.g/Documents/UFRN/CG/ray-tracer-2020/project03/build/CMakeFiles/rebuild_cache.dir
+/Users/lairene.g/Documents/UFRN/CG/ray-tracer-2020/project03/build/CMakeFiles/edit_cache.dir
+/Users/lairene.g/Documents/UFRN/CG/ray-tracer-2020/project03/build/CMakeFiles/basic_rt3.dir
