@@ -48,7 +48,7 @@ class OrthographicCamera : public Camera {
                         set_parallel_box( l, r, b, t );
                     };
         
-        Ray OrthographicCamera::generate_ray( int x, int y) const {
+        Ray generate_ray( int x, int y) const {
             // The input coord, (x,y) are expressed in pixel coords, aka **Raster space**.
             // Calculate the normalivez value (u_int,v_int) correspoding to (x,y).
             float u_int = l + (r-l)*(x+0.5f)/film->getWidth();
