@@ -7,15 +7,15 @@
 using namespace std;
 
 class LookAt {
-    private:
-        Point3D lookAt;
-        Point3D lookFrom;
-        Point3D up;
     public:
+        Point3D lookFrom;
+        Point3D lookAt;
+        Vec3 up;
+        
         LookAt(){};
-        LookAt(Point3D mLookAt, Point3D mLookFrom, Point3D mUp){ 
-            this->lookAt = mLookAt;
+        LookAt(Point3D mLookFrom, Point3D mLookAt, Vec3 mUp){ 
             this->lookFrom = mLookFrom;
+            this->lookAt = mLookAt;
             this->up = mUp;
         };
 };

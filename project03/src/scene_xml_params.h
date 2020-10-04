@@ -35,6 +35,11 @@ namespace CameraParams {
     const string FOVY = "fovy";
 };
 
+namespace CameraTypes {
+    const string ORTHOGRAPHIC = "orthographic";
+    const string PERSPECTIVE = "perspective";
+}
+
 namespace LookAtParams {
     const string LOOK_FROM = "look_from";
     const string LOOK_AT = "look_at";

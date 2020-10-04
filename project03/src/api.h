@@ -3,6 +3,8 @@
 
 #include "paramset.h"
 #include "camera.h"
+#include "orthographic.h"
+#include "perspective.h"
 #include "film.h"
 #include "background.h"
 #include "scene_xml_params.h"
@@ -15,43 +17,52 @@
 using namespace std;
 
 struct RenderOptions {
-    Camera camera;
+    LookAt lookAt;
+    Camera *camera;
     Film film;
     Background background;
     Integrator integrator;
     Material material;
     vector<Object> objects;
-    LookAt lookAt;
 };
 
 RenderOptions ro;
 
 class API {
+    private:
+        static void finishCameraSetup();
     public:
+        static void setLookAt(ParamSet & ps);
         static void setCamera(ParamSet & ps);
         static void setFilm(ParamSet & ps);
         static void setBackground(ParamSet & ps);
         static void setObject(ParamSet & ps);
         static void setMaterial(ParamSet & ps);
         static void setIntegrator(ParamSet & ps);
-        static void setLookAt(ParamSet & ps);
         static void setRayTracer(RT3 & rt3);
 };
 
-void API::setCamera(ParamSet & ps) {
-    auto type = ps.find<string>(CameraParams::TYPE, "orthographic");
-    auto screen_window = ps.findArray<int>(CameraParams::SCREEN_WINDOW);
-    auto fovy = ps.find<int>(CameraParams::FOVY, 65);
-    int screen_windowVetor [4];
+void API::setLookAt(ParamSet & ps) {
+    auto lookAt = ps.findArray<int>(LookAtParams::LOOK_AT);
+    auto lookFrom = ps.findArray<int>(LookAtParams::LOOK_FROM);
+    auto up = ps.findArray<int>(LookAtParams::UP);
 
-    if (screen_window != nullptr) {
-        screen_windowVetor[0] = screen_window[0];
-        screen_windowVetor[1] = screen_window[1];
-        screen_windowVetor[2] = screen_window[2];
-        screen_windowVetor[3] = screen_window[3];
-        ro.camera = Camera(type, screen_windowVetor, 0);
-    } else {
-        ro.camera = Camera(type, nullptr, 0);
+    ro.lookAt = LookAt(Point3D(lookFrom[0], lookFrom[1], lookFrom[2]),
+                       Point3D(lookAt[0], lookAt[1], lookAt[2]), 
+                       Vec3(up[0], up[1], up[2]));
+}
+
+void API::setCamera(ParamSet & ps) {
+    auto type = ps.find<string>(CameraParams::TYPE, "");
+    auto screen_window = ps.findArray<float>(CameraParams::SCREEN_WINDOW);
+    auto fovy = ps.find<float>(CameraParams::FOVY, -1);
+
+    if (type == CameraTypes::ORTHOGRAPHIC && screen_window != nullptr) {
+        ro.camera = new OrthographicCamera(screen_window[0], screen_window[1], screen_window[2], screen_window[3]);
+        return;
+    } else if (type == CameraTypes::PERSPECTIVE && fovy > -1) {
+        ro.camera = new PerspectiveCamera(fovy);
+        return;
     }
 }
 
@@ -68,15 +79,15 @@ void API::setFilm(ParamSet & ps) {
     auto filename = ps.find<string>(FilmParams::FILENAME, "output_img.ppm");
     auto imgType = ps.find<string>(FilmParams::IMG_TYPE, "ppm");
     auto crop_window = ps.findArray<int>(FilmParams::CROP_WINDOW);
-    int crop_windowVetor[4];
+    int crop_window_vec[4];
     auto gamma_corrected = ps.find<string>(FilmParams::GAMMA_CORRECTED, "yes");
 
     if (crop_window != nullptr) {
-        crop_windowVetor[0] = crop_window[0];
-        crop_windowVetor[1] = crop_window[1];
-        crop_windowVetor[2] = crop_window[2];
-        crop_windowVetor[3] = crop_window[3];
-        ro.film = Film(type, xRes, yRes, filename, imgType, crop_windowVetor, "no");
+        crop_window_vec[0] = crop_window[0];
+        crop_window_vec[1] = crop_window[1];
+        crop_window_vec[2] = crop_window[2];
+        crop_window_vec[3] = crop_window[3];
+        ro.film = Film(type, xRes, yRes, filename, imgType, crop_window_vec, "no");
     } else {
         ro.film = Film(type, xRes, yRes, filename, imgType, nullptr, "no");
     }
@@ -96,16 +107,6 @@ void API::setObject(ParamSet & ps) {
     auto center = ps.findArray<float>(ObjectParams::CENTER);
 
     ro.objects.push_back(Object(type, radius, Point3D(center[0],center[1],center[2])));
-}
-
-void API::setLookAt(ParamSet & ps) {
-    auto lookAt = ps.findArray<int>(LookAtParams::LOOK_AT);
-    auto lookFrom = ps.findArray<int>(LookAtParams::LOOK_FROM);
-    auto up = ps.findArray<int>(LookAtParams::UP);
-
-    ro.lookAt = LookAt(Point3D(lookAt[0], lookAt[1], lookAt[2]), 
-                       Point3D(lookFrom[0], lookFrom[1], lookFrom[2]),
-                       Point3D(up[0],up[1],up[2]));
 }
 
 void API::setBackground(ParamSet & ps) {
@@ -140,12 +141,18 @@ void API::setBackground(ParamSet & ps) {
 }
 
 void API::setRayTracer(RT3 & rt3) {
+    finishCameraSetup();
     rt3.camera = ro.camera;
-    rt3.film = move(ro.film);
     rt3.background = ro.background;
     rt3.integrator = ro.integrator;
     rt3.material = ro.material;
     rt3.objects = ro.objects;
+}
+
+void API::finishCameraSetup() {
+    ro.camera->film = &ro.film;
+    ro.camera->finishSetup();
+    ro.camera->build_camera_frame(ro.lookAt.lookFrom, ro.lookAt.lookAt, ro.lookAt.up);
 }
 
 #endif

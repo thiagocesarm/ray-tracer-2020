@@ -7,8 +7,8 @@
 
 class RT3 {
     public:
-        Film film;
-        Camera camera;
+        // Film film;
+        Camera *camera;
         Background background;
         Integrator integrator;
         Material material;
