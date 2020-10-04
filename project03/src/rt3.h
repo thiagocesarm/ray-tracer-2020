@@ -11,7 +11,7 @@ class RT3 {
         Camera *camera;
         Background background;
         Integrator integrator;
-        Material material;
+        Material * material;
         vector<Primitive> objects;
 };
 

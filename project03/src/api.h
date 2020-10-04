@@ -19,11 +19,11 @@ using namespace std;
 
 struct RenderOptions {
     LookAt lookAt;
-    Camera *camera;
+    Camera * camera;
     Film film;
     Background background;
     Integrator integrator;
-    Material material;
+    Material * material;
     vector<Primitive> objects;
 };
 
@@ -99,7 +99,7 @@ void API::setMaterial(ParamSet & ps) {
     auto type = ps.find<string>(MaterialParams::TYPE, "flat");
     auto color = ps.findArray<float>(MaterialParams::COLOR);
 
-    ro.material = Material(type, Color(color[0],color[1],color[2]));
+    ro.material = new Material(type, Color(color[0],color[1],color[2]));
 }
 
 void API::setObject(ParamSet & ps) {
@@ -108,7 +108,7 @@ void API::setObject(ParamSet & ps) {
     if (type == ObjectTypes::SPHERE) {
         auto radius = ps.find<float>(SphereParams::RADIUS, 0.4);
         auto center = ps.findArray<float>(SphereParams::CENTER);
-        ro.objects.push_back( Sphere( radius, Point3D(center[0],center[1],center[2] )) );
+        ro.objects.push_back( Sphere( radius, Point3D(center[0],center[1],center[2] ), ro.material ) );
     }
 }
 

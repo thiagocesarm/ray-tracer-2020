@@ -4,6 +4,7 @@
 #include <iostream>
 #include "point3D.h"
 #include "primitive.h"
+#include "material.h"
 #include "scene_xml_params.h"
 
 using namespace std;
@@ -13,7 +14,7 @@ class Sphere: public Primitive {
         float radius;
         Point3D center;
 
-        Sphere(float mRadius, Point3D mCenter) : Primitive( ObjectTypes::SPHERE ) {
+        Sphere(float mRadius, Point3D mCenter, Material * material) : Primitive( ObjectTypes::SPHERE, material ) {
             this->radius = mRadius;
             this->center = mCenter;
         };
