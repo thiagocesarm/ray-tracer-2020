@@ -8,16 +8,15 @@
 
 using namespace std;
 
-class Camera {
-    private:
-        string type;
-        const int* screen_window;
-        int fovy;
+class Camera {    
     public:
+        string type;
+        int screen_window[4];
+        int fovy;
         Camera(){};
         Camera( Film *f ) : film{ f }
              { /* empty */ }
-        Camera(string mType, const int* mScreen_window, int mFovy);
+        Camera(string mType, int mScreen_window[4], int mFovy);
         Ray generate_ray( float ss, float tt, Ray& ray);
         Ray generate_ray( int x, int y, int width, int height);
         Film *film;
@@ -66,9 +65,12 @@ class Camera {
         }
 };
 
-Camera::Camera(string mType, const int *mScreen_window, int mFovy) {
+Camera::Camera(string mType, int mScreen_window[4], int mFovy) {
     type = mType;
-    screen_window = mScreen_window;
+    screen_window[0] = mScreen_window[0];
+    screen_window[1] = mScreen_window[1];
+    screen_window[2] = mScreen_window[2];
+    screen_window[3] = mScreen_window[3];
     fovy = mFovy;
 }
 

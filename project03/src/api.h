@@ -42,9 +42,14 @@ void API::setCamera(ParamSet & ps) {
     auto type = ps.find<string>(CameraParams::TYPE, "orthographic");
     auto screen_window = ps.findArray<int>(CameraParams::SCREEN_WINDOW);
     auto fovy = ps.find<int>(CameraParams::FOVY, 65);
+    int screen_windowVetor [4];
 
     if (screen_window != nullptr) {
-        ro.camera = Camera(type, screen_window, 0);
+        screen_windowVetor[0] = screen_window[0];
+        screen_windowVetor[1] = screen_window[1];
+        screen_windowVetor[2] = screen_window[2];
+        screen_windowVetor[3] = screen_window[3];
+        ro.camera = Camera(type, screen_windowVetor, 0);
     } else {
         ro.camera = Camera(type, nullptr, 0);
     }
@@ -63,10 +68,15 @@ void API::setFilm(ParamSet & ps) {
     auto filename = ps.find<string>(FilmParams::FILENAME, "output_img.ppm");
     auto imgType = ps.find<string>(FilmParams::IMG_TYPE, "ppm");
     auto crop_window = ps.findArray<int>(FilmParams::CROP_WINDOW);
+    int crop_windowVetor[4];
     auto gamma_corrected = ps.find<string>(FilmParams::GAMMA_CORRECTED, "yes");
 
     if (crop_window != nullptr) {
-        ro.film = Film(type, xRes, yRes, filename, imgType, crop_window, "no");
+        crop_windowVetor[0] = crop_window[0];
+        crop_windowVetor[1] = crop_window[1];
+        crop_windowVetor[2] = crop_window[2];
+        crop_windowVetor[3] = crop_window[3];
+        ro.film = Film(type, xRes, yRes, filename, imgType, crop_windowVetor, "no");
     } else {
         ro.film = Film(type, xRes, yRes, filename, imgType, nullptr, "no");
     }
@@ -133,6 +143,9 @@ void API::setRayTracer(RT3 & rt3) {
     rt3.camera = ro.camera;
     rt3.film = move(ro.film);
     rt3.background = ro.background;
+    rt3.integrator = ro.integrator;
+    rt3.material = ro.material;
+    rt3.objects = ro.objects;
 }
 
 #endif
