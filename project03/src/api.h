@@ -7,6 +7,10 @@
 #include "background.h"
 #include "scene_xml_params.h"
 #include "rt3.h"
+#include "integrator.h"
+#include "material.h"
+#include "object.h"
+#include "lookAt.h"
 
 using namespace std;
 
@@ -14,6 +18,10 @@ struct RenderOptions {
     Camera camera;
     Film film;
     Background background;
+    Integrator integrator;
+    Material material;
+    vector<Object> objects;
+    LookAt lookAt;
 };
 
 RenderOptions ro;
@@ -23,11 +31,21 @@ class API {
         static void setCamera(ParamSet & ps);
         static void setFilm(ParamSet & ps);
         static void setBackground(ParamSet & ps);
+        static void setObject(ParamSet & ps);
+        static void setMaterial(ParamSet & ps);
+        static void setIntegrator(ParamSet & ps);
+        static void setLookAt(ParamSet & ps);
         static void setRayTracer(RT3 & rt3);
 };
 
 void API::setCamera(ParamSet & ps) {
     auto type = ps.find<string>(CameraParams::TYPE, "orthographic");
+
+    ro.integrator = Integrator(type);
+}
+
+void API::setIntegrator(ParamSet & ps) {
+    auto type = ps.find<string>(IntegratorParams::TYPE, "flat");
 
     ro.camera = Camera(type);
 }
@@ -40,6 +58,31 @@ void API::setFilm(ParamSet & ps) {
     auto imgType = ps.find<string>(FilmParams::IMG_TYPE, "ppm");
 
     ro.film = Film(type, xRes, yRes, filename, imgType);
+}
+
+void API::setMaterial(ParamSet & ps) {
+    auto type = ps.find<string>(MaterialParams::TYPE, "flat");
+    auto color = ps.findArray<float>(MaterialParams::COLOR);
+
+    ro.material = Material(type, Color(color[0],color[1],color[2]));
+}
+
+void API::setObject(ParamSet & ps) {
+    auto type = ps.find<string>(ObjectParams::TYPE, "sphere");
+    auto radius = ps.find<float>(ObjectParams::RADIUS, 0.4);
+    auto center = ps.findArray<float>(ObjectParams::CENTER);
+
+    ro.objects.push_back(Object(type, radius, Point3D(center[0],center[1],center[2])));
+}
+
+void API::setLookAt(ParamSet & ps) {
+    auto lookAt = ps.findArray<int>(LookAtParams::LOOK_AT);
+    auto lookFrom = ps.findArray<int>(LookAtParams::LOOK_FROM);
+    auto up = ps.findArray<int>(LookAtParams::UP);
+
+    ro.lookAt = LookAt(Point3D(lookAt[0], lookAt[1], lookAt[2]), 
+                       Point3D(lookFrom[0], lookFrom[1], lookFrom[2]),
+                       Point3D(up[0],up[1],up[2]));
 }
 
 void API::setBackground(ParamSet & ps) {

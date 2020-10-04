@@ -50,6 +50,19 @@ void Parser::processTag(XMLElement * currentNode) {
         type[0] = currentNode->Attribute(CameraParams::TYPE.c_str());
         currentParamSet->add<string>(CameraParams::TYPE, move(type), 1);
 
+        if (currentNode->Attribute(CameraParams::SCREEN_WINDOW.c_str()) != nullptr) {
+            string screen_WindowString = currentNode->Attribute(CameraParams::SCREEN_WINDOW.c_str());
+            unique_ptr<int[]> sreen_windowArray{ new int[4] };
+            fillArrayWithValuesFromString<int>(screen_WindowString, sreen_windowArray, 4);
+            currentParamSet->add<int>(CameraParams::SCREEN_WINDOW, move(sreen_windowArray), 4);
+        }
+
+        if (currentNode->Attribute(CameraParams::FOVY.c_str()) != nullptr) {
+            unique_ptr<int[]> fovy{ new int[1] };
+            fovy[0] = currentNode->IntAttribute(CameraParams::FOVY.c_str());
+            currentParamSet->add<int>(CameraParams::FOVY, move(fovy), 1);
+        }
+
         API::setCamera(*currentParamSet);
     } else if (tag == SceneTags::FILM) {
         unique_ptr<string[]> type{ new string[1] };
@@ -71,6 +84,19 @@ void Parser::processTag(XMLElement * currentNode) {
         unique_ptr<string[]> imageType{ new string[1] };
         imageType[0] = currentNode->Attribute(FilmParams::IMG_TYPE.c_str());
         currentParamSet->add<string>(FilmParams::IMG_TYPE, move(imageType), 1);
+
+        if (currentNode->Attribute(FilmParams::CROP_WINDOW.c_str()) != nullptr) {
+            string crop_WindowString = currentNode->Attribute(FilmParams::CROP_WINDOW.c_str());
+            unique_ptr<int[]> crop_windowArray{ new int[3] };
+            fillArrayWithValuesFromString<int>(crop_WindowString, crop_windowArray, 3);
+            currentParamSet->add<int>(FilmParams::CROP_WINDOW, move(crop_windowArray), 3);
+        }
+
+        if (currentNode->Attribute(FilmParams::GAMMA_CORRECTED.c_str()) != nullptr) {
+            unique_ptr<string[]> gamma_corrected{ new string[1] };
+            imageType[0] = currentNode->Attribute(FilmParams::GAMMA_CORRECTED.c_str());
+            currentParamSet->add<string>(FilmParams::GAMMA_CORRECTED, move(gamma_corrected), 1);
+        }
 
         API::setFilm(*currentParamSet);
     } else if (tag == SceneTags::BACKGROUND) {
@@ -120,6 +146,55 @@ void Parser::processTag(XMLElement * currentNode) {
         }
 
         API::setBackground(*currentParamSet);
+    } else if (tag == SceneTags::INTEGRATOR) {
+        unique_ptr<string[]> type{ new string[1] };
+        type[0] = currentNode->Attribute(IntegratorParams::TYPE.c_str());
+        currentParamSet->add<string>(IntegratorParams::TYPE, move(type), 1);
+
+        API::setIntegrator(*currentParamSet);    
+    } else if (tag == SceneTags::MATERIAL) {
+        unique_ptr<string[]> type{ new string[1] };
+        type[0] = currentNode->Attribute(MaterialParams::TYPE.c_str());
+        currentParamSet->add<string>(MaterialParams::TYPE, move(type), 1);
+
+        string colorsString = currentNode->Attribute(MaterialParams::COLOR.c_str());
+        unique_ptr<float[]> colorsArray( new float[3] );
+        fillArrayWithValuesFromString<float>(colorsString, colorsArray, 3);
+        currentParamSet->add<float>(MaterialParams::COLOR, move(colorsArray), 3);
+        
+        API::setMaterial(*currentParamSet);
+    } else if (tag == SceneTags::OBJECT) {
+        unique_ptr<string[]> type{ new string[1] };
+        type[0] = currentNode->Attribute(ObjectParams::TYPE.c_str());
+        currentParamSet->add<string>(ObjectParams::TYPE, move(type), 1);
+
+        unique_ptr<float[]> radius{ new float[1] };
+        radius[0] = currentNode->FloatAttribute(ObjectParams::RADIUS.c_str());
+        currentParamSet->add<float>(ObjectParams::RADIUS, move(radius), 1);
+
+        string centerString = currentNode->Attribute(ObjectParams::CENTER.c_str());
+        unique_ptr<float[]> centerArray( new float[3] );
+        fillArrayWithValuesFromString<float>(centerString, centerArray, 3);
+        currentParamSet->add<float>(ObjectParams::CENTER, move(centerArray), 3);
+        
+        API::setObject(*currentParamSet);
+    } else if (tag == SceneTags::LOOK_AT) {
+        string lookAtString = currentNode->Attribute(LookAtParams::LOOK_AT.c_str());
+        unique_ptr<int[]> lookAtArray( new int[3] );
+        fillArrayWithValuesFromString<int>(lookAtString, lookAtArray, 3);
+        currentParamSet->add<int>(LookAtParams::LOOK_AT, move(lookAtArray), 3);
+
+        string lookFromString = currentNode->Attribute(LookAtParams::LOOK_FROM.c_str());
+        unique_ptr<int[]> lookFromArray( new int[3] );
+        fillArrayWithValuesFromString<int>(lookFromString, lookFromArray, 3);
+        currentParamSet->add<int>(LookAtParams::LOOK_FROM, move(lookFromArray), 3);
+
+        string upString = currentNode->Attribute(LookAtParams::UP.c_str());
+        unique_ptr<int[]> upArray( new int[3] );
+        fillArrayWithValuesFromString<int>(upString, upArray, 3);
+        currentParamSet->add<int>(LookAtParams::UP, move(upArray), 3);
+        
+        API::setLookAt(*currentParamSet);
     }
     processTag(currentNode->FirstChildElement());
     processTag(currentNode->NextSiblingElement());
