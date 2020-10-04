@@ -11,11 +11,13 @@ using namespace std;
 class Camera {
     private:
         string type;
+        const int* screen_window;
+        int fovy;
     public:
         Camera(){};
         Camera( Film *f ) : film{ f }
              { /* empty */ }
-        Camera(string mType);
+        Camera(string mType, const int* mScreen_window, int mFovy);
         Ray generate_ray( float ss, float tt, Ray& ray);
         Ray generate_ray( int x, int y, int width, int height);
         Film *film;
@@ -64,8 +66,10 @@ class Camera {
         }
 };
 
-Camera::Camera(string mType) {
+Camera::Camera(string mType, const int *mScreen_window, int mFovy) {
     type = mType;
+    screen_window = mScreen_window;
+    fovy = mFovy;
 }
 
 #endif

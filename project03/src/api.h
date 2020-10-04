@@ -40,14 +40,20 @@ class API {
 
 void API::setCamera(ParamSet & ps) {
     auto type = ps.find<string>(CameraParams::TYPE, "orthographic");
+    auto screen_window = ps.findArray<int>(CameraParams::SCREEN_WINDOW);
+    auto fovy = ps.find<int>(CameraParams::FOVY, 65);
 
-    ro.integrator = Integrator(type);
+    if (screen_window != nullptr) {
+        ro.camera = Camera(type, screen_window, 0);
+    } else {
+        ro.camera = Camera(type, nullptr, 0);
+    }
 }
 
 void API::setIntegrator(ParamSet & ps) {
     auto type = ps.find<string>(IntegratorParams::TYPE, "flat");
 
-    ro.camera = Camera(type);
+    ro.integrator = Integrator(type);
 }
 
 void API::setFilm(ParamSet & ps) {
@@ -56,8 +62,15 @@ void API::setFilm(ParamSet & ps) {
     auto yRes = ps.find<int>(FilmParams::Y_RES, 600);
     auto filename = ps.find<string>(FilmParams::FILENAME, "output_img.ppm");
     auto imgType = ps.find<string>(FilmParams::IMG_TYPE, "ppm");
+    auto crop_window = ps.findArray<int>(FilmParams::CROP_WINDOW);
+    auto gamma_corrected = ps.find<string>(FilmParams::GAMMA_CORRECTED, "yes");
 
-    ro.film = Film(type, xRes, yRes, filename, imgType);
+    if (crop_window != nullptr) {
+        ro.film = Film(type, xRes, yRes, filename, imgType, crop_window, "no");
+    } else {
+        ro.film = Film(type, xRes, yRes, filename, imgType, nullptr, "no");
+    }
+
 }
 
 void API::setMaterial(ParamSet & ps) {

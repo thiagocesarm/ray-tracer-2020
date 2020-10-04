@@ -18,9 +18,11 @@ class Film {
         string filename;
         string imgType;
         unique_ptr<Color[]> pixels;
+        const int* crop_window;
+        string fovy;
     public:
         Film(){};
-        Film(string mType, int mXRes, int mYRes, string mFilename, string mImgType);
+        Film(string mType, int mXRes, int mYRes, string mFilename, string mImgType, const int* mCrop_window, string mFovy);
         int getWidth();
         int getHeight();
         bool isValidCoordinate(int, int);
@@ -29,12 +31,14 @@ class Film {
         void printToPngFile();
 };
 
-Film::Film(string mType, int xRes, int yRes, string mFilename, string mImgType) {
+Film::Film(string mType, int xRes, int yRes, string mFilename, string mImgType, const int* mCrop_window, string mFovy) {
     type = mType;
     width = xRes;
     height = yRes;
     filename = mFilename;
     imgType = mImgType;
+    crop_window = mCrop_window;
+    fovy = mFovy;
     pixels = std::unique_ptr<Color[]>(new Color[width*height]);
     std::fill(pixels.get(), pixels.get() + (width * height), Color(255,255,255));
 }
