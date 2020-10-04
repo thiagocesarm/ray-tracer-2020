@@ -3,6 +3,8 @@
 
 #include "paramset.h"
 #include "camera.h"
+#include "primitive.h"
+#include "sphere.h"
 #include "orthographic.h"
 #include "perspective.h"
 #include "film.h"
@@ -11,7 +13,6 @@
 #include "rt3.h"
 #include "integrator.h"
 #include "material.h"
-#include "object.h"
 #include "lookAt.h"
 
 using namespace std;
@@ -23,7 +24,7 @@ struct RenderOptions {
     Background background;
     Integrator integrator;
     Material material;
-    vector<Object> objects;
+    vector<Primitive> objects;
 };
 
 RenderOptions ro;
@@ -102,11 +103,13 @@ void API::setMaterial(ParamSet & ps) {
 }
 
 void API::setObject(ParamSet & ps) {
-    auto type = ps.find<string>(ObjectParams::TYPE, "sphere");
-    auto radius = ps.find<float>(ObjectParams::RADIUS, 0.4);
-    auto center = ps.findArray<float>(ObjectParams::CENTER);
+    auto type = ps.find<string>(ObjectParams::TYPE, ObjectTypes::SPHERE);
 
-    ro.objects.push_back(Object(type, radius, Point3D(center[0],center[1],center[2])));
+    if (type == ObjectTypes::SPHERE) {
+        auto radius = ps.find<float>(SphereParams::RADIUS, 0.4);
+        auto center = ps.findArray<float>(SphereParams::CENTER);
+        ro.objects.push_back( Sphere( radius, Point3D(center[0],center[1],center[2] )) );
+    }
 }
 
 void API::setBackground(ParamSet & ps) {

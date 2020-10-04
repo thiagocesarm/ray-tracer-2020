@@ -3,7 +3,7 @@
 
 #include "integrator.h"
 #include "material.h"
-#include "object.h"
+#include "primitive.h"
 
 class RT3 {
     public:
@@ -12,7 +12,7 @@ class RT3 {
         Background background;
         Integrator integrator;
         Material material;
-        vector<Object> objects;
+        vector<Primitive> objects;
 };
 
 #endif

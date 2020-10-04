@@ -166,16 +166,19 @@ void Parser::processTag(XMLElement * currentNode) {
     } else if (tag == SceneTags::OBJECT) {
         unique_ptr<string[]> type{ new string[1] };
         type[0] = currentNode->Attribute(ObjectParams::TYPE.c_str());
+        string objectType = type[0];
         currentParamSet->add<string>(ObjectParams::TYPE, move(type), 1);
 
-        unique_ptr<float[]> radius{ new float[1] };
-        radius[0] = currentNode->FloatAttribute(ObjectParams::RADIUS.c_str());
-        currentParamSet->add<float>(ObjectParams::RADIUS, move(radius), 1);
-
-        string centerString = currentNode->Attribute(ObjectParams::CENTER.c_str());
-        unique_ptr<float[]> centerArray( new float[3] );
-        fillArrayWithValuesFromString<float>(centerString, centerArray, 3);
-        currentParamSet->add<float>(ObjectParams::CENTER, move(centerArray), 3);
+        if (objectType == ObjectTypes::SPHERE) {
+            unique_ptr<float[]> radius{ new float[1] };
+            radius[0] = currentNode->FloatAttribute(SphereParams::RADIUS.c_str());
+            currentParamSet->add<float>(SphereParams::RADIUS, move(radius), 1);
+            
+            string centerString = currentNode->Attribute(SphereParams::CENTER.c_str());
+            unique_ptr<float[]> centerArray( new float[3] );
+            fillArrayWithValuesFromString<float>(centerString, centerArray, 3);
+            currentParamSet->add<float>(SphereParams::CENTER, move(centerArray), 3);
+        }
         
         API::setObject(*currentParamSet);
     } else if (tag == SceneTags::LOOK_AT) {

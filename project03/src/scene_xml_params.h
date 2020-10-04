@@ -25,9 +25,16 @@ namespace MaterialParams {
 
 namespace ObjectParams {
     const string TYPE = "type";
+};
+
+namespace ObjectTypes {
+    const string SPHERE = "sphere";
+}
+
+namespace SphereParams {
     const string RADIUS = "radius";
     const string CENTER = "center";
-};
+}
 
 namespace CameraParams {
     const string TYPE = "type";
