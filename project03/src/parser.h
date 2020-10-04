@@ -68,29 +68,36 @@ void Parser::processTag(XMLElement * currentNode) {
         unique_ptr<string[]> type{ new string[1] };
         type[0] = currentNode->Attribute(FilmParams::TYPE.c_str());
         currentParamSet->add<string>(FilmParams::TYPE, move(type), 1);
+
         unique_ptr<int[]> xResolution{ new int[1] };
         xResolution[0] = currentNode->IntAttribute(FilmParams::X_RES.c_str());
         currentParamSet->add<int>(FilmParams::X_RES, move(xResolution), 1);
+
         unique_ptr<int[]> yResolution{ new int[1] };
         yResolution[0] = currentNode->IntAttribute(FilmParams::Y_RES.c_str());
         currentParamSet->add<int>(FilmParams::Y_RES, move(yResolution), 1);
+
         unique_ptr<string[]> filename{ new string[1] };
         filename[0] = currentNode->Attribute(FilmParams::FILENAME.c_str());
         currentParamSet->add<string>(FilmParams::FILENAME, move(filename), 1);
+
         unique_ptr<string[]> imageType{ new string[1] };
         imageType[0] = currentNode->Attribute(FilmParams::IMG_TYPE.c_str());
         currentParamSet->add<string>(FilmParams::IMG_TYPE, move(imageType), 1);
+
         if (currentNode->Attribute(FilmParams::CROP_WINDOW.c_str()) != nullptr) {
             string crop_WindowString = currentNode->Attribute(FilmParams::CROP_WINDOW.c_str());
             unique_ptr<int[]> crop_windowArray{ new int[4] };
             fillArrayWithValuesFromString<int>(crop_WindowString, crop_windowArray, 4);
             currentParamSet->add<int>(FilmParams::CROP_WINDOW, move(crop_windowArray), 4);
         }
+
         if (currentNode->Attribute(FilmParams::GAMMA_CORRECTED.c_str()) != nullptr) {
             unique_ptr<string[]> gamma_corrected{ new string[1] };
             gamma_corrected[0] = currentNode->Attribute(FilmParams::GAMMA_CORRECTED.c_str());
             currentParamSet->add<string>(FilmParams::GAMMA_CORRECTED, move(gamma_corrected), 1);
         }
+        
         API::setFilm(*currentParamSet);
     } else if (tag == SceneTags::BACKGROUND) {
         unique_ptr<string[]> type{ new string[1] };

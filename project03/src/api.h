@@ -81,15 +81,15 @@ void API::setFilm(ParamSet & ps) {
     auto crop_window = ps.findArray<int>(FilmParams::CROP_WINDOW);
     int crop_window_vec[4];
     auto gamma_corrected = ps.find<string>(FilmParams::GAMMA_CORRECTED, "yes");
-
+    
     if (crop_window != nullptr) {
         crop_window_vec[0] = crop_window[0];
         crop_window_vec[1] = crop_window[1];
         crop_window_vec[2] = crop_window[2];
         crop_window_vec[3] = crop_window[3];
-        ro.film = Film(type, xRes, yRes, filename, imgType, crop_window_vec, "no");
+        ro.film = Film(type, xRes, yRes, filename, imgType, crop_window_vec);
     } else {
-        ro.film = Film(type, xRes, yRes, filename, imgType, nullptr, "no");
+        ro.film = Film(type, xRes, yRes, filename, imgType, nullptr);
     }
 
 }

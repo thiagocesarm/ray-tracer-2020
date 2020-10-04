@@ -19,10 +19,9 @@ class Film {
         string imgType;
         unique_ptr<Color[]> pixels;
         int crop_window[4];
-        string fovy;
     public:
         Film(){};
-        Film(string mType, int mXRes, int mYRes, string mFilename, string mImgType, int mCrop_window[4], string mFovy);
+        Film(string mType, int mXRes, int mYRes, string mFilename, string mImgType, int * mCrop_window);
         int getWidth();
         int getHeight();
         bool isValidCoordinate(int, int);
@@ -31,17 +30,20 @@ class Film {
         void printToPngFile();
 };
 
-Film::Film(string mType, int xRes, int yRes, string mFilename, string mImgType, int mCrop_window[4], string mFovy) {
+Film::Film(string mType, int xRes, int yRes, string mFilename, string mImgType, int * mCrop_window) {
     type = mType;
     width = xRes;
     height = yRes;
     filename = mFilename;
     imgType = mImgType;
-    crop_window[0] = mCrop_window[0];
-    crop_window[1] = mCrop_window[1];
-    crop_window[2] = mCrop_window[2];
-    crop_window[3] = mCrop_window[3];
-    fovy = mFovy;
+
+    if (mCrop_window != nullptr) {
+        crop_window[0] = mCrop_window[0];
+        crop_window[1] = mCrop_window[1];
+        crop_window[2] = mCrop_window[2];
+        crop_window[3] = mCrop_window[3];
+    }
+    
     pixels = std::unique_ptr<Color[]>(new Color[width*height]);
     std::fill(pixels.get(), pixels.get() + (width * height), Color(255,255,255));
 }
