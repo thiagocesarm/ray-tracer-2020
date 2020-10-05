@@ -41,7 +41,7 @@ class Camera {
             // Finally, we just need the 3rd orthonormal vector of our new camera basis.
             v = normalize( cross ( w, u ) );
             // By default, the view plane normal is perpendicular to the camera's w axis.
-            view_plane_normal = -w;
+            view_plane_normal = w;
             
             std::cout << "\n\n>>> The Camera frame is:\n";
             std::cout << "    u (" << u.x() << " " << u.y() << " " << u.z() << " )\n";

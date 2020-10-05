@@ -28,9 +28,8 @@ class Sphere: public Primitive {
 
 		bool intersect_p( Ray r ) const override { 
             Point3D origin_center_vec = r.getOrigin() - center;
-            Point3D origin_center_vec_double = 2.0f * origin_center_vec;
             // B = 2 (o - c) dot d
-            float B = dot( Vec3(origin_center_vec_double.getX(), origin_center_vec_double.getY(), origin_center_vec_double.getZ()), r.getDirection() );
+            float B = dot( Vec3(2 * origin_center_vec.getX(), 2 * origin_center_vec.getY(), 2 * origin_center_vec.getZ()), r.getDirection() );
             // A = d dot d
             float A = dot( r.getDirection(), r.getDirection() );
             // C = (o - c) dot (o - c) - r²

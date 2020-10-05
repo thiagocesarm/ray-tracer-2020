@@ -5,8 +5,6 @@
 #include "parser.h"
 #include "api.h"
 #include "camera.h"
-// #include "orthographic.h"
-// #include "perspective.h"
 
 using namespace tinyxml2;
 using namespace std;
@@ -32,8 +30,7 @@ int main(int argc, char** argv) {
                 auto color = rayTracer.background.sample( float(i)/float(w), float(j)/float(h) );
                 for (const auto p : rayTracer.objects) {
                     if (p->intersect_p( ray )) {
-                        color = Color{255, 0, 0};
-                        break;
+                        color = Color {255, 0, 0 }; // simply paint the object red
                     }
                 }
                 rayTracer.camera->film->drawPixel(i, j, color);

@@ -58,7 +58,7 @@ void API::setCamera(ParamSet & ps) {
     auto screen_window = ps.findArray<float>(CameraParams::SCREEN_WINDOW);
     auto fovy = ps.find<float>(CameraParams::FOVY, -1);
 
-    if (type == CameraTypes::ORTHOGRAPHIC && screen_window != nullptr) {
+    if (type == CameraTypes::ORTHOGRAPHIC && screen_window != nullptr) { 
         ro.camera = new OrthographicCamera(screen_window[0], screen_window[1], screen_window[2], screen_window[3]);
         return;
     } else if (type == CameraTypes::PERSPECTIVE && fovy > -1) {
@@ -108,7 +108,7 @@ void API::setObject(ParamSet & ps) {
     if (type == ObjectTypes::SPHERE) {
         auto radius = ps.find<float>(SphereParams::RADIUS, 0.4);
         auto center = ps.findArray<float>(SphereParams::CENTER);
-        ro.objects.push_back( new Sphere( radius, Point3D(center[0],center[1],center[2] ), ro.material ) );
+        ro.objects.push_back( new Sphere( radius, Point3D( center[0], center[1], center[2] ), ro.material ) );
     }
 }
 
