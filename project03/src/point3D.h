@@ -10,7 +10,7 @@ class Point3D {
         float z;
     public:
         Point3D(){};
-        Point3D(int mX, int mY, int mZ){ 
+        Point3D(float mX, float mY, float mZ){ 
             this->x = mX;
             this->y = mY;
             this->z = mZ;
