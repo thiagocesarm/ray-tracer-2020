@@ -6,6 +6,8 @@
 #include "vec3.h"
 #include "primitive.h"
 
+class Primitive;
+
 class Surfel{
 	public:
 		Surfel( const Point3D&p,const Vec3&n, const Vec3&wo, float time, 
@@ -18,7 +20,7 @@ class Surfel{
 		Vec3 wo;      //!< Outgoing direction of light, which is -ray.
 		float time;     //!< Time of contact.
 		Point2D uv;     //!< Parametric coordinate (u,v) of the hit surface.
-		const Primitive *primitive=nullptr; //!< Pointer to the primitive.
+		const Primitive * primitive = nullptr; //!< Pointer to the primitive.
 };
 
 #endif

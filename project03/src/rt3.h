@@ -12,7 +12,7 @@ class RT3 {
         Background background;
         Integrator integrator;
         Material * material;
-        vector<Primitive> objects;
+        vector<Primitive* > objects;
 };
 
 #endif

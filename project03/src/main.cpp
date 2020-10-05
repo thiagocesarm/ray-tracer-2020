@@ -28,10 +28,14 @@ int main(int argc, char** argv) {
 
         for (int j = h - 1; j >= 0 ; j--) {
             for (int i = 0 ; i < w ; i++) {
-                // Generate ray with the Shirley method.
-                Ray r = rayTracer.camera->generate_ray( i, j );
-                // Print out the two rays, that must be the same (regardless of the method).
+                Ray ray = rayTracer.camera->generate_ray( i, j );
                 auto color = rayTracer.background.sample( float(i)/float(w), float(j)/float(h) );
+                for (const auto p : rayTracer.objects) {
+                    if (p->intersect_p( ray )) {
+                        color = Color{255, 0, 0};
+                        break;
+                    }
+                }
                 rayTracer.camera->film->drawPixel(i, j, color);
             }
         }

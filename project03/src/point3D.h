@@ -24,4 +24,8 @@ inline Point3D operator-(const Point3D &p1, const Point3D &p2) { return Point3D(
 
 inline Point3D operator+(const Point3D &p1, const Vec3 &v1) { return Point3D(p1.getX() + v1.x(), p1.getY() + v1.y(), p1.getZ()  + v1.z());}
 
+inline Point3D operator*(float t, const Point3D &p) {
+    return Point3D(t*p.getX(), t*p.getY(), t*p.getZ());
+}
+
 #endif

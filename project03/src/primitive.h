@@ -3,14 +3,20 @@
 
 #include <iostream>
 #include "material.h"
+#include "surfel.h"
 
 using namespace std;
+
+// class Surfel;
 
 class Primitive {
     public:
         string type;
         Material * material;
 
-        Primitive( string t, Material * m ) : type{ t }, material { m }{ };
+        Primitive(){ /* empty */ };
+        virtual bool intersect( Ray r, Surfel *sf ) const = 0;
+		virtual bool intersect_p( Ray r ) const = 0;
+
 };
 #endif

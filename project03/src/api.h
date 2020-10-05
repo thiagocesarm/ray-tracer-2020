@@ -24,7 +24,7 @@ struct RenderOptions {
     Background background;
     Integrator integrator;
     Material * material;
-    vector<Primitive> objects;
+    vector<Primitive *> objects;
 };
 
 RenderOptions ro;
@@ -108,7 +108,7 @@ void API::setObject(ParamSet & ps) {
     if (type == ObjectTypes::SPHERE) {
         auto radius = ps.find<float>(SphereParams::RADIUS, 0.4);
         auto center = ps.findArray<float>(SphereParams::CENTER);
-        ro.objects.push_back( Sphere( radius, Point3D(center[0],center[1],center[2] ), ro.material ) );
+        ro.objects.push_back( new Sphere( radius, Point3D(center[0],center[1],center[2] ), ro.material ) );
     }
 }
 

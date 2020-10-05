@@ -14,7 +14,7 @@ class Material {
         Material(){};
         Material(string mType, Color mColor){ 
             this->type = mType;
-            this->color = color;
+            this->color = mColor;
         };
 };
 

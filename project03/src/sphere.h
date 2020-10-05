@@ -2,6 +2,7 @@
 #define _SPHERE_
 
 #include <iostream>
+#include <cmath>
 #include "point3D.h"
 #include "primitive.h"
 #include "material.h"
@@ -14,9 +15,30 @@ class Sphere: public Primitive {
         float radius;
         Point3D center;
 
-        Sphere(float mRadius, Point3D mCenter, Material * material) : Primitive( ObjectTypes::SPHERE, material ) {
+        Sphere(float mRadius, Point3D mCenter, Material * material) {
+            this->type = ObjectTypes::SPHERE, 
+            this->material = material;
             this->radius = mRadius;
             this->center = mCenter;
+        };
+        
+        bool intersect( Ray r, Surfel *sf ) const override {
+            return intersect_p(r);
+        }
+
+		bool intersect_p( Ray r ) const override { 
+            Point3D origin_center_vec = r.getOrigin() - center;
+            Point3D origin_center_vec_double = 2.0f * origin_center_vec;
+            // B = 2 (o - c) dot d
+            float B = dot( Vec3(origin_center_vec_double.getX(), origin_center_vec_double.getY(), origin_center_vec_double.getZ()), r.getDirection() );
+            // A = d dot d
+            float A = dot( r.getDirection(), r.getDirection() );
+            // C = (o - c) dot (o - c) - r²
+            float C = dot( Vec3(origin_center_vec.getX(), origin_center_vec.getY(), origin_center_vec.getZ()), Vec3(origin_center_vec.getX(), origin_center_vec.getY(), origin_center_vec.getZ()) );
+            C = C - pow(radius, 2.0);
+
+            // DELTA = B² - 4AC
+            return (pow(B, 2.0) - 4 * A * C) >= 0;
         };
 };
 
