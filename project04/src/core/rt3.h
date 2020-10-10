@@ -1,9 +1,9 @@
 #ifndef _RT3_
 #define _RT3_
 
-#include "integrator.h"
-#include "material.h"
-#include "primitive.h"
+#include "../core/integrator.h"
+#include "../core/material.h"
+#include "../core/primitive.h"
 
 class RT3 {
     public:

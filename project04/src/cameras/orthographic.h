@@ -1,11 +1,11 @@
 #ifndef _ORTHO_CAM_
 #define _ORTHO_CAM_
 
-#include "film.h"
-#include "camera.h"
-#include "point3D.h"
-#include "vec3.h"
-#include "ray.h"
+#include "../core/film.h"
+#include "../core/camera.h"
+#include "../core/point3D.h"
+#include "../core/vec3.h"
+#include "../core/ray.h"
 
 
 class OrthographicCamera : public Camera {

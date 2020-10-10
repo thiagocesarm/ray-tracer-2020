@@ -2,8 +2,8 @@
 #define _PRIMITIVE_
 
 #include <iostream>
-#include "material.h"
-#include "surfel.h"
+#include "../core/material.h"
+#include "../core/surfel.h"
 
 using namespace std;
 

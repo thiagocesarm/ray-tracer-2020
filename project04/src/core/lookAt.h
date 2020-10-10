@@ -2,7 +2,7 @@
 #define _LOOKAT_
 
 #include <iostream>
-#include "point3D.h"
+#include "../core/point3D.h"
 
 using namespace std;
 

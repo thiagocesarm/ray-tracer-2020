@@ -1,10 +1,10 @@
 #ifndef _SURFEL_
 #define _SURFEL_
 
-#include "point3D.h"
-#include "point2D.h"
-#include "vec3.h"
-#include "primitive.h"
+#include "../core/point3D.h"
+#include "../core/point2D.h"
+#include "../core/vec3.h"
+#include "../core/primitive.h"
 
 class Primitive;
 

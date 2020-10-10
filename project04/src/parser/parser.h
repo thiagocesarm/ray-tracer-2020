@@ -3,11 +3,11 @@
 
 #include <iostream>
 #include <sstream>
-#include "tinyxml2.h"
-#include "paramset.h"
-#include "scene_xml_params.h"
-#include "api.h"
-#include "rt3.h"
+#include "../ext/tinyxml2.h"
+#include "../parser/paramset.h"
+#include "../parser/scene_xml_params.h"
+#include "../core/api.h"
+#include "../core/rt3.h"
 
 using namespace std;
 using namespace tinyxml2;

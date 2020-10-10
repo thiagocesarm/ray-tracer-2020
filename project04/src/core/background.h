@@ -1,7 +1,7 @@
 #ifndef _BACKGROUND_
 #define _BACKGROUND_
 
-#include "color.h"
+#include "../core/color.h"
 
 class Background {
     private:

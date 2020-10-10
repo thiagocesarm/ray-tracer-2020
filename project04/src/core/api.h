@@ -1,19 +1,19 @@
 #ifndef _API_
 #define _API_
 
-#include "paramset.h"
-#include "camera.h"
-#include "primitive.h"
-#include "sphere.h"
-#include "orthographic.h"
-#include "perspective.h"
-#include "film.h"
-#include "background.h"
-#include "scene_xml_params.h"
-#include "rt3.h"
-#include "integrator.h"
-#include "material.h"
-#include "lookAt.h"
+#include "../parser/paramset.h"
+#include "../core/camera.h"
+#include "../core/primitive.h"
+#include "../shapes/sphere.h"
+#include "../cameras/orthographic.h"
+#include "../cameras/perspective.h"
+#include "../core/film.h"
+#include "../core/background.h"
+#include "../parser/scene_xml_params.h"
+#include "../core/rt3.h"
+#include "../core/integrator.h"
+#include "../core/material.h"
+#include "../core/lookAt.h"
 
 using namespace std;
 

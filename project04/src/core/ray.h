@@ -1,8 +1,8 @@
 #ifndef _RAY_
 #define _RAY_
 
-#include "vec3.h"
-#include "point3D.h"
+#include "../core/vec3.h"
+#include "../core/point3D.h"
 
 
 class Ray {

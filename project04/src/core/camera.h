@@ -1,10 +1,10 @@
 #ifndef _CAMERA_
 #define _CAMERA_ 
 
-#include "ray.h"
-#include "point3D.h"
-#include "vec3.h"
-#include "film.h"
+#include "../core/ray.h"
+#include "../core/point3D.h"
+#include "../core/vec3.h"
+#include "../core/film.h"
 
 using namespace std;
 

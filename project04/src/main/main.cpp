@@ -1,10 +1,10 @@
-#include "tinyxml2.h"
+#include "../ext/tinyxml2.h"
 #include <iostream>
 #include <memory>
-#include "paramset.h"
-#include "parser.h"
-#include "api.h"
-#include "camera.h"
+#include "../parser/paramset.h"
+#include "../parser/parser.h"
+#include "../core/api.h"
+#include "../core/camera.h"
 
 using namespace tinyxml2;
 using namespace std;

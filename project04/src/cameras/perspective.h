@@ -3,11 +3,11 @@
 
 #define PI 3.14159265358979323846
 
-#include "film.h"
-#include "camera.h"
-#include "point3D.h"
-#include "vec3.h"
-#include "ray.h"
+#include "../core/film.h"
+#include "../core/camera.h"
+#include "../core/point3D.h"
+#include "../core/vec3.h"
+#include "../core/ray.h"
 
 class PerspectiveCamera : public Camera {
     public:

@@ -3,10 +3,10 @@
 
 #include <iostream>
 #include <cmath>
-#include "point3D.h"
-#include "primitive.h"
-#include "material.h"
-#include "scene_xml_params.h"
+#include "../core/point3D.h"
+#include "../core/primitive.h"
+#include "../core/material.h"
+#include "../parser/scene_xml_params.h"
 
 using namespace std;
 
