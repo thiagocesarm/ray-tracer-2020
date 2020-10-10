@@ -2,7 +2,7 @@
 #define _MATERIAL_
 
 #include <iostream>
-#include "color.h"
+#include "../core/color.h"
 
 using namespace std;
 
