@@ -1,12 +1,10 @@
-# Acknowledgments
+Authors:
+Irene Ginani Costa Pinheiro
+Thiago César Morais Diniz de Lucena
 
-Basic architecture for the Ray Tracing Teaching Tool (RT3) Project provided by Selan R. dos Santos (see LICENSE).
+Compile:
+    g++ -std=c++11 -I include/ include/tinyxml2.cpp include/lodepng.cpp src/main.cpp -o rtracer
 
-# To compile
-
-```
-cmake -S . -Bbuild
-cd build
-make
-./basic_rt3 ../scene/scene_01.xml
-```
+Execute:
+    ./rtracer scenes/persp.xml
+    ./rtracer scenes/ortho.xml
