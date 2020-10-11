@@ -98,7 +98,7 @@ void API::setFilm(ParamSet & ps) {
 void API::setMaterial(ParamSet & ps) {
     auto type = ps.find<string>(MaterialParams::TYPE, "flat");
     auto color = ps.findArray<float>(MaterialParams::COLOR);
-    
+
     ro.material = new Material(type, Color(color[0],color[1],color[2]));
 
 }
