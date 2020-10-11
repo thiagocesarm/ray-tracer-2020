@@ -7,15 +7,16 @@
 using namespace std;
 
 class Material {
-    private:
-        string type;
-        Color color;
     public:
         Material(){};
-        Material(string mType, Color mColor){ 
-            this->type = mType;
-            this->color = mColor;
-        };
+        Material(string mType, Color mColor);
+        Color color;
+        string type;
 };
+
+Material::Material(string mType, Color mColor) {
+    type = mType;
+    color = mColor;
+}
 
 #endif

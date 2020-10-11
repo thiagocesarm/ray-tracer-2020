@@ -30,7 +30,7 @@ int main(int argc, char** argv) {
                 auto color = rayTracer.background.sample( float(i)/float(w), float(j)/float(h) );
                 for (const auto p : rayTracer.objects) {
                     if (p->intersect_p( ray )) {
-                        color = Color {255, 0, 0 }; // simply paint the object red
+                        color = p->material->color;
                     }
                 }
                 rayTracer.camera->film->drawPixel(i, j, color);

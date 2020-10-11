@@ -6,21 +6,21 @@ enum RGB { R = 0, G, B };
 
 class Color {
     private:
-        uchar values[3] {0}; // default color white
+        float values[3] {0}; // default color white
     public:
         Color() {}
-        Color(uchar r, uchar g, uchar b) {
+        Color(float r, float g, float b) {
             this->values[R] = r;
             this->values[G] = g;
             this->values[B] = b;
         }
-        uchar red() const { return this->values[R]; }
-        uchar green() const { return this->values[G]; }
-        uchar blue() const { return this->values[B]; }
-        uchar r() const { return this->values[R]; }
-        uchar g() const { return this->values[G]; }
-        uchar b() const { return this->values[B]; }
-        uchar* getValues() {
+        float red() const { return this->values[R]; }
+        float green() const { return this->values[G]; }
+        float blue() const { return this->values[B]; }
+        float r() const { return this->values[R]; }
+        float g() const { return this->values[G]; }
+        float b() const { return this->values[B]; }
+        float* getValues() {
             return values;
         }
         void setValues(uchar r, uchar g, uchar b) {

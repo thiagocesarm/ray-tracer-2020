@@ -15,12 +15,12 @@ class Surfel{
 			: p{p}, n{n}, wo{wo}, time{time}, uv{uv}, primitive{pri}
             {/* empty */};
 
-		Point3D p;        //!< Contact point.
-		Vec3 n;       //!< The surface normal.
-		Vec3 wo;      //!< Outgoing direction of light, which is -ray.
-		float time;     //!< Time of contact.
-		Point2D uv;     //!< Parametric coordinate (u,v) of the hit surface.
-		const Primitive * primitive = nullptr; //!< Pointer to the primitive.
+		Point3D p;      
+		Vec3 n;     
+		Vec3 wo;     
+		float time;     
+		Point2D uv;     
+		const Primitive * primitive = nullptr; 
 };
 
 #endif
