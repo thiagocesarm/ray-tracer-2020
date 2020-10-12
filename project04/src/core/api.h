@@ -7,6 +7,7 @@
 #include "../shapes/sphere.h"
 #include "../cameras/orthographic.h"
 #include "../cameras/perspective.h"
+#include "../materials/flatMaterial.h"
 #include "../core/film.h"
 #include "../core/background.h"
 #include "../parser/scene_xml_params.h"
@@ -98,6 +99,10 @@ void API::setFilm(ParamSet & ps) {
 void API::setMaterial(ParamSet & ps) {
     auto type = ps.find<string>(MaterialParams::TYPE, "flat");
     auto color = ps.findArray<float>(MaterialParams::COLOR);
+
+    if (type == "flat"){
+        ro.material = new FlatMaterial(Color(color[0],color[1],color[2]));
+    }
 
     ro.material = new Material(type, Color(color[0],color[1],color[2]));
 

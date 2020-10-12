@@ -7,8 +7,6 @@
 
 using namespace std;
 
-// class Surfel;
-
 class Primitive {
     public:
         string type;
