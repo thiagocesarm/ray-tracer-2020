@@ -20,7 +20,9 @@ int main(int argc, char** argv) {
 
         RT3 rayTracer = RT3();
         parser.loadScene(rayTracer);
+        rayTracer.run();
         
+        /*
         auto w = rayTracer.camera->film->getWidth();
         auto h = rayTracer.camera->film->getHeight();
 
@@ -38,6 +40,7 @@ int main(int argc, char** argv) {
         }
 
         rayTracer.camera->film->printToFile();
+        */
     } else {
         cout << ">>> You must provide a scene description file!" << endl;
         return EXIT_FAILURE;

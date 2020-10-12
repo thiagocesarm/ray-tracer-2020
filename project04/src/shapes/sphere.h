@@ -5,24 +5,22 @@
 #include <cmath>
 #include "../core/point3D.h"
 #include "../core/primitive.h"
-#include "../core/material.h"
+#include "../core/shape.h"
 #include "../parser/scene_xml_params.h"
 
 using namespace std;
 
-class Sphere: public Primitive {
+class Sphere: public Shape {
     public:
         float radius;
         Point3D center;
 
-        Sphere(float mRadius, Point3D mCenter, Material * material) {
-            this->type = ObjectTypes::SPHERE, 
-            this->material = material;
+        Sphere(float mRadius, Point3D mCenter) {
             this->radius = mRadius;
             this->center = mCenter;
         };
         
-        bool intersect( Ray r, Surfel *sf ) const override {
+        bool intersect( Ray r, float * t_hit, Surfel *sf ) const override {
             return intersect_p(r);
         }
 

@@ -7,7 +7,8 @@
 
 class Ray {
     public:
-        Ray (const Point3D& origin, const Vec3& direction ) : origin{origin}, direction{direction} {/*empty*/}
+        mutable float max_t = 10000;
+        Ray (const Point3D& origin, const Vec3& direction ) : origin{origin}, direction{direction} { /*empty*/ }
         Vec3 getDirection() const {return direction;}
         Point3D getOrigin() const {return origin;}
         void setDirection(Vec3 direction) {this->direction = direction;}
