@@ -10,19 +10,17 @@ using namespace std;
 
 class Scene {
     public:
-        Background * background; // The background object.
-        shared_ptr<Primitive> aggregate; // The scene graph of objects, acceleration structure. 
+        Background * background;
+        shared_ptr<Primitive> aggregate;
 
         Scene( Background * bkg, shared_ptr<Primitive> ag)
-             : background{ bkg }, aggregate{ ag }
-        {/* empty */}
+             : background{ bkg }, aggregate{ ag } { /* empty */ }
 
-        // Determines the intersection info; return true if there is an intersection.
-        bool intersect( Ray& r, Surfel *isect ) const {
+        bool intersect( const Ray& r, Surfel *isect ) const {
             return aggregate.get()->intersect(r, isect);
         }
 
-        bool intersect_p( Ray& r ) const {
+        bool intersect_p( const Ray& r ) const {
             return aggregate.get()->intersect_p(r);
         }
 };

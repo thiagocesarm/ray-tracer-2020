@@ -12,11 +12,16 @@ class GeometricPrimitive: public Primitive {
 
         GeometricPrimitive(Shape * s, Material * m) : shape{s}, material{m} {};
 
-        bool intersect( Ray r, Surfel *sf ) const override {
-            return shape->intersect(r, &r.max_t,  sf);
+        bool intersect( const Ray& r, Surfel *sf ) const override {
+            float previous_t_max = r.max_t;
+            bool did_intersect = shape->intersect(r, &r.max_t, sf);
+            if ( r.max_t < previous_t_max ) {
+                sf->primitive = this;
+            }
+            return did_intersect;
         };
 
-		bool intersect_p( Ray r ) const override {
+		bool intersect_p( const Ray& r ) const override {
             return shape->intersect_p(r);
         };
 

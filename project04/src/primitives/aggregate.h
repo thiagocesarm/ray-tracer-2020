@@ -23,11 +23,15 @@ class PrimList: public AggregatePrimitive {
     public:
         PrimList(vector<Primitive *> prims) : primitives{ prims } {};
 
-        bool intersect( Ray r, Surfel *sf ) const override {
-            return false;
+        bool intersect( const Ray& r, Surfel *sf ) const override {
+            bool did_intersect = false;
+            for(auto obj : primitives) {
+                did_intersect = did_intersect | obj->intersect(r, sf);
+            }
+            return did_intersect;
         };
 
-		bool intersect_p( Ray r ) const override {
+		bool intersect_p( const Ray& r ) const override {
             for(auto obj : primitives) {
                 if (obj->intersect_p(r)) {
                     return true;

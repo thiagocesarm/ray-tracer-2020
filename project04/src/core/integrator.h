@@ -10,7 +10,6 @@ using namespace std;
 
 class Integrator {
 	public:
-		// virtual ~Integrator();
 		virtual void render( const Scene& scene ) = 0;
 };
 
@@ -18,7 +17,6 @@ class SamplerIntegrator : public Integrator {
 	protected:
         Camera * camera;
 	public:
-		// virtual ~SamplerIntegrator() = default;
 		SamplerIntegrator( Camera * cam ) : camera{ cam } {};
 
 		virtual Color Li( const Ray& ray, const Scene& scene, const Color bkg_color ) const = 0;
@@ -33,18 +31,17 @@ class SamplerIntegrator : public Integrator {
 			for (int j = h - 1; j >= 0 ; j--) {
 				for (int i = 0 ; i < w ; i++) {
 					Ray ray = camera->generate_ray( i, j );
-					auto color = scene.background->sample( float(i)/float(w), float(j)/float(h) );
-					if (scene.aggregate->intersect_p(ray)) {
-						color = Color(255,0,0);
-						// color = scene.aggregate->getMaterial()->getColor();
-					}
-					camera->film->drawPixel(i, j, color);
+					Surfel isect;
+
+					auto bkg_color = scene.background->sample( float(i)/float(w), float(j)/float(h) );
+					auto pixel_color = Li(ray, scene, bkg_color);
+
+					camera->film->drawPixel(i, j, pixel_color);
 				}
 			}
 
 			camera->film->printToFile();
         };
 };
-
 
 #endif

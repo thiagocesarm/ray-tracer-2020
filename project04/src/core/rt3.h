@@ -8,13 +8,10 @@
 
 class RT3 {
     public:
-        // Film film;
         Camera * camera;
-        // Background background
         Integrator * integrator;
         Scene * scene;
-        // Material * material;
-        // vector<Primitive* > objects;
+        
         void run() {
             integrator->render(*scene);
         };

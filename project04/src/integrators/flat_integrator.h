@@ -6,13 +6,17 @@
 
 class FlatIntegrator: public SamplerIntegrator {
     public:
-
-        // virtual ~FlatIntegrator() = default;
-
         FlatIntegrator(Camera * cam) : SamplerIntegrator(cam) { }
 
         Color Li(const Ray& ray, const Scene & scene, const Color bkg_color ) const override {
-            return bkg_color;
+            Color L(0,0,0);
+            Surfel isect; // Intersection information.  
+            if (!scene.intersect(ray, &isect)) {
+                L = bkg_color;
+            } else {
+                L = isect.primitive->getMaterial()->getColor();
+            }
+            return L;
         }
 };
 

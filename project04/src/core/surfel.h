@@ -10,6 +10,7 @@ class Primitive;
 
 class Surfel{
 	public:
+		Surfel(){ /* empty */ };
 		Surfel( const Point3D&p,const Vec3&n, const Vec3&wo, float time, 
 			const Point2D& uv, const Primitive *pri )
 			: p{p}, n{n}, wo{wo}, time{time}, uv{uv}, primitive{pri}

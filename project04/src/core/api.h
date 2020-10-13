@@ -1,24 +1,24 @@
 #ifndef _API_
 #define _API_
 
-#include "../parser/paramset.h"
-#include "../core/camera.h"
-#include "../core/primitive.h"
-#include "../primitives/geometric_primitive.h"
-#include "../core/shape.h"
-#include "../shapes/sphere.h"
 #include "../cameras/orthographic.h"
 #include "../cameras/perspective.h"
-#include "../materials/flatMaterial.h"
-#include "../core/film.h"
 #include "../core/background.h"
-#include "../parser/scene_xml_params.h"
-#include "../core/rt3.h"
+#include "../core/camera.h"
+#include "../core/film.h"
 #include "../core/integrator.h"
-#include "../core/material.h"
 #include "../core/lookAt.h"
-#include "../primitives/aggregate.h"
+#include "../core/material.h"
+#include "../core/primitive.h"
+#include "../core/rt3.h"
+#include "../core/shape.h"
+#include "../materials/flatMaterial.h"
 #include "../integrators/flat_integrator.h"
+#include "../parser/paramset.h"
+#include "../parser/scene_xml_params.h"
+#include "../primitives/aggregate.h"
+#include "../primitives/geometric_primitive.h"
+#include "../shapes/sphere.h"
 
 using namespace std;
 
@@ -160,9 +160,6 @@ void API::setRayTracer(RT3 & rt3) {
     rt3.camera = ro.camera;
     rt3.integrator = ro.integrator;
     rt3.scene = new Scene( ro.background, shared_ptr<PrimList>( new PrimList(ro.objects) ) );
-    // rt3.background = ro.background;
-    // rt3.material = ro.material;
-    // rt3.objects = ro.objects;
 }
 
 void API::finishCameraSetup() {
