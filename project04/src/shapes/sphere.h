@@ -51,7 +51,7 @@ class Sphere: public Shape {
             }
         };
 
-		bool intersect_p( Ray r ) const override { 
+        bool intersect_p( Ray r ) const override { 
             Point3D origin_center_vec = r.getOrigin() - center;
             // B = 2 (o - c) dot d
             float B = dot( Vec3(2 * origin_center_vec.getX(), 2 * origin_center_vec.getY(), 2 * origin_center_vec.getZ()), r.getDirection() );
