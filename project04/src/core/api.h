@@ -1,20 +1,24 @@
 #ifndef _API_
 #define _API_
 
-#include "../parser/paramset.h"
-#include "../core/camera.h"
-#include "../core/primitive.h"
-#include "../shapes/sphere.h"
 #include "../cameras/orthographic.h"
 #include "../cameras/perspective.h"
-#include "../materials/flatMaterial.h"
-#include "../core/film.h"
 #include "../core/background.h"
-#include "../parser/scene_xml_params.h"
-#include "../core/rt3.h"
+#include "../core/camera.h"
+#include "../core/film.h"
 #include "../core/integrator.h"
-#include "../core/material.h"
 #include "../core/lookAt.h"
+#include "../core/material.h"
+#include "../core/primitive.h"
+#include "../core/rt3.h"
+#include "../core/shape.h"
+#include "../materials/flatMaterial.h"
+#include "../integrators/flat_integrator.h"
+#include "../parser/paramset.h"
+#include "../parser/scene_xml_params.h"
+#include "../primitives/aggregate.h"
+#include "../primitives/geometric_primitive.h"
+#include "../shapes/sphere.h"
 
 using namespace std;
 
@@ -22,8 +26,8 @@ struct RenderOptions {
     LookAt lookAt;
     Camera * camera;
     Film film;
-    Background background;
-    Integrator integrator;
+    Background * background;
+    Integrator * integrator;
     Material * material;
     vector<Primitive *> objects;
 };
@@ -69,9 +73,11 @@ void API::setCamera(ParamSet & ps) {
 }
 
 void API::setIntegrator(ParamSet & ps) {
-    auto type = ps.find<string>(IntegratorParams::TYPE, "flat");
+    auto type = ps.find<string>(IntegratorParams::TYPE, IntegratorTypes::FLAT);
 
-    ro.integrator = Integrator(type);
+    if (type == IntegratorTypes::FLAT) {
+        ro.integrator = new FlatIntegrator(ro.camera);
+    }
 }
 
 void API::setFilm(ParamSet & ps) {
@@ -97,14 +103,12 @@ void API::setFilm(ParamSet & ps) {
 }
 
 void API::setMaterial(ParamSet & ps) {
-    auto type = ps.find<string>(MaterialParams::TYPE, "flat");
+    auto type = ps.find<string>(MaterialParams::TYPE, MaterialTypes::FLAT);
     auto color = ps.findArray<float>(MaterialParams::COLOR);
 
-    if (type == "flat"){
+    if (type == MaterialTypes::FLAT){
         ro.material = new FlatMaterial(Color(color[0],color[1],color[2]));
     }
-
-    ro.material = new Material(type, Color(color[0],color[1],color[2]));
 
 }
 
@@ -114,7 +118,9 @@ void API::setObject(ParamSet & ps) {
     if (type == ObjectTypes::SPHERE) {
         auto radius = ps.find<float>(SphereParams::RADIUS, 0.4);
         auto center = ps.findArray<float>(SphereParams::CENTER);
-        ro.objects.push_back( new Sphere( radius, Point3D( center[0], center[1], center[2] ), ro.material ) );
+
+        Shape * shape = new Sphere( radius, Point3D( center[0], center[1], center[2] ) );
+        ro.objects.push_back( new GeometricPrimitive(shape, ro.material) );
     }
 }
 
@@ -123,7 +129,7 @@ void API::setBackground(ParamSet & ps) {
     auto type = ps.find<string>(BackgroundParams::TYPE, "colors");
     auto color = ps.findArray<int>(BackgroundParams::COLOR);
     if (color != nullptr) {
-        ro.background = Background(Color(color[0], color[1], color[2]));
+        ro.background = new Background(Color(color[0], color[1], color[2]));
     } else {
         const int defaultColor[3] = { 0, 0, 0 };
         auto mapping = ps.find<string>(BackgroundParams::MAPPING, "screen");
@@ -140,7 +146,7 @@ void API::setBackground(ParamSet & ps) {
         const int * brColors = ps.findArray<int>(BackgroundParams::BOTTOM_RIGHT);
         if (brColors == nullptr) { brColors = defaultColor; }
 
-        ro.background = Background(
+        ro.background = new Background(
             Color(blColors[0], blColors[1], blColors[2]),
             Color(tlColors[0], tlColors[1], tlColors[2]),
             Color(trColors[0], trColors[1], trColors[2]),
@@ -152,10 +158,8 @@ void API::setBackground(ParamSet & ps) {
 void API::setRayTracer(RT3 & rt3) {
     finishCameraSetup();
     rt3.camera = ro.camera;
-    rt3.background = ro.background;
     rt3.integrator = ro.integrator;
-    rt3.material = ro.material;
-    rt3.objects = ro.objects;
+    rt3.scene = new Scene( ro.background, shared_ptr<PrimList>( new PrimList(ro.objects) ) );
 }
 
 void API::finishCameraSetup() {

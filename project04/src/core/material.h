@@ -8,15 +8,8 @@ using namespace std;
 
 class Material {
     public:
-        Material(){};
-        Material(string mType, Color mColor);
-        Color color;
-        string type;
+        Material(){ /* empty */ };
+        virtual Color getColor() const = 0;
 };
-
-Material::Material(string mType, Color mColor) {
-    type = mType;
-    color = mColor;
-}
 
 #endif

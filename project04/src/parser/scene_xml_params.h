@@ -18,9 +18,17 @@ namespace IntegratorParams {
     const string TYPE = "type";
 };
 
+namespace IntegratorTypes {
+    const string FLAT = "flat";
+};
+
 namespace MaterialParams {
     const string TYPE = "type";
     const string COLOR = "color";
+};
+
+namespace MaterialTypes {
+    const string FLAT = "flat";
 };
 
 namespace ObjectParams {
