@@ -46,6 +46,9 @@ class Sphere: public Shape {
                 }
                 if ( t < *t_hit ) { 
                     *t_hit = t;
+                    sf->p = r(t); // set contact point
+                    auto normal_point = r(t) - center;
+                    sf->n = normalize(Vec3(normal_point.getX(), normal_point.getY(), normal_point.getZ())); // set normal vector
                 }
                 return true;
             }

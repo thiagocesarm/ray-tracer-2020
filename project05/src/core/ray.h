@@ -13,12 +13,12 @@ class Ray {
         Point3D getOrigin() const {return origin;}
         void setDirection(Vec3 direction) {this->direction = direction;}
         void setOrigin(Point3D origin) {this->origin = origin;}
-    private:
-        Point3D origin; 
-        Vec3 direction;
         Point3D operator()(float t) const { 
             Vec3 newVector = direction * t;
             return Point3D(origin.getX() + newVector.x(), origin.getY() + newVector.y(), origin.getZ() + newVector.z()); 
         }
+    private:
+        Point3D origin; 
+        Vec3 direction;
 };
 #endif
