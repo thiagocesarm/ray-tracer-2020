@@ -28,8 +28,33 @@ class SamplerIntegrator : public Integrator {
 			auto w = camera->film->getWidth();
 			auto h = camera->film->getHeight();
 
+			int total_steps = w * h;
+			int progress = 0;
+			int percentil = 1;
+
+			cout << ">>> Start RAY TRACER" << endl;
+			cout << ">>> " << endl;
+			cout << ">>> RENDERING SCENE progress" << endl;
+			cout << ">>> " << endl;
+
 			for (int j = h - 1; j >= 0 ; j--) {
 				for (int i = 0 ; i < w ; i++) {
+					progress++;
+					if (progress >= (float(total_steps) / 100 * percentil)) {
+						// Inform user about progress
+						// cout << "\r"; // uncomment to update progress on single line
+						cout << ">>> " << percentil << "% [";
+						for (size_t p = 0; p < percentil - 1; p++) {
+							cout << "=";
+						}
+						cout << ">";
+						for (size_t p = percentil; p < 100; p++) {
+							cout << " ";
+						}
+						cout << "]\n"; // remove /n to update progress on single line
+						percentil++;
+					}
+
 					Ray ray = camera->generate_ray( i, j );
 					Surfel isect;
 
@@ -39,7 +64,7 @@ class SamplerIntegrator : public Integrator {
 					camera->film->drawPixel(i, j, pixel_color);
 				}
 			}
-
+			
 			camera->film->printToFile();
         };
 };

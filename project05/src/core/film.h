@@ -69,6 +69,14 @@ void Film::drawPixel(int i, int j, Color color) {
 }
 
 void Film::printToFile() {
+
+    int total_steps = width * height;
+    int progress = 0;
+    int percentil = 1;
+    cout << ">>> " << endl;
+    cout << ">>> PREPARE OUTPUT FILE progress" << endl;
+    cout << ">>> " << endl;
+
     if (imgType == "ppm") {
         std::ofstream outfile;
         outfile.open(filename);
@@ -77,23 +85,58 @@ void Film::printToFile() {
         outfile << "255" << std::endl;
         auto line_end = width*3;
         for (auto i = 0; i < (height*width); ++i) {
+            progress++;
+            if (progress >= (float(total_steps) / 100 * percentil)) {
+                // Inform user about progress
+                // cout << "\r"; // uncomment to update progress on single line
+                cout << ">>> " << percentil << "% [";
+                for (size_t p = 0; p < percentil - 1; p++) {
+                    cout << "=";
+                }
+                cout << ">";
+                for (size_t p = percentil; p < 100; p++) {
+                    cout << " ";
+                }
+                cout << "]\n"; // remove /n to update progress on single line
+                percentil++;
+            }
+
             // [0, 1] to [0, 255] values
             outfile << int(pixels[i].r() * 255) << " ";
             outfile << int(pixels[i].g() * 255) << " ";
             outfile << int(pixels[i].b() * 255) << " ";
             if (i % line_end == line_end - 1) { outfile << std::endl; }  
         }
+        cout << endl;
+
         outfile.close();
     } else if (imgType == "png") {
         vector<unsigned char> pngVector;
         for(auto i = 0; i < width * height; i++) {
+            progress++;
+            if (progress >= (float(total_steps) / 100 * percentil)) {
+                // Inform user about progress
+                // cout << "\r"; // uncomment to update progress on single line
+                cout << ">>> " << percentil << "% [";
+                for (size_t p = 0; p < percentil - 1; p++) {
+                    cout << "=";
+                }
+                cout << ">";
+                for (size_t p = percentil; p < 100; p++) {
+                    cout << " ";
+                }
+                cout << "]\n"; // remove /n to update progress on single line
+                percentil++;
+            }
+
             // [0, 1] to [0, 255] values
             pngVector.push_back(pixels[i].r() * 255);
             pngVector.push_back(pixels[i].g() * 255);
             pngVector.push_back(pixels[i].b() * 255);
             pngVector.push_back(255);
         }
-
+        cout << endl;
+        cout << ">>> ENCODING PNG FILE\n";
         unsigned error = lodepng::encode(filename, pngVector, width, height);
         if (error) {
             cout << ">>> Could not encode PNG image. Error " << error << ": " << lodepng_error_text(error) << endl;
