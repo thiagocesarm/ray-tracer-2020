@@ -43,7 +43,8 @@ Color Background::sample(double i, double j) {
     double g_val = j_comp*g_val_bottom + j*g_val_top;
     double b_val = j_comp*b_val_bottom + j*b_val_top;
 
-    return Color(int(r_val), int(g_val), int(b_val));
+    // [0, 255] to [0, 1] values
+    return Color(float(r_val / 255), float(g_val / 255), float(b_val / 255));
 }
 
 #endif

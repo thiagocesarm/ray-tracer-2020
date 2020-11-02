@@ -6,6 +6,8 @@ enum RGB { R = 0, G, B };
 
 class Color {
     private:
+        // color values are stored as numbers in the interval [0, 1]
+        // make conversion to [0, 255] values only when needed
         float values[3] {0}; // default color white
     public:
         Color() {}
@@ -22,11 +24,6 @@ class Color {
         float b() const { return this->values[B]; }
         float* getValues() {
             return values;
-        }
-        void setValues(uchar r, uchar g, uchar b) {
-            this->values[R] = r;
-            this->values[G] = g;
-            this->values[B] = b;
         }
         bool operator == (const Color& rhs) {
             return this->values[R] == rhs.red() &&

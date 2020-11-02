@@ -77,18 +77,20 @@ void Film::printToFile() {
         outfile << "255" << std::endl;
         auto line_end = width*3;
         for (auto i = 0; i < (height*width); ++i) {
-            outfile << int(pixels[i].r()) << " ";
-            outfile << int(pixels[i].g()) << " ";
-            outfile << int(pixels[i].b()) << " ";
+            // [0, 1] to [0, 255] values
+            outfile << int(pixels[i].r() * 255) << " ";
+            outfile << int(pixels[i].g() * 255) << " ";
+            outfile << int(pixels[i].b() * 255) << " ";
             if (i % line_end == line_end - 1) { outfile << std::endl; }  
         }
         outfile.close();
     } else if (imgType == "png") {
         vector<unsigned char> pngVector;
         for(auto i = 0; i < width * height; i++) {
-            pngVector.push_back(pixels[i].r());
-            pngVector.push_back(pixels[i].g());
-            pngVector.push_back(pixels[i].b());
+            // [0, 1] to [0, 255] values
+            pngVector.push_back(pixels[i].r() * 255);
+            pngVector.push_back(pixels[i].g() * 255);
+            pngVector.push_back(pixels[i].b() * 255);
             pngVector.push_back(255);
         }
 
