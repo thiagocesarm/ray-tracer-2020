@@ -64,6 +64,58 @@ void Parser::processTag(XMLElement * currentNode) {
         }
 
         API::setCamera(*currentParamSet);
+    } else if (tag == SceneTags::LIGHT_SOURCE) {
+        unique_ptr<string[]> type{ new string[1] };
+        type[0] = currentNode->Attribute(LightSourceParams::TYPE.c_str());
+        currentParamSet->add<string>(LightSourceParams::TYPE, move(type), 1);
+
+        if (currentNode->Attribute(LightSourceParams::L.c_str()) != nullptr) {
+            string LString = currentNode->Attribute(LightSourceParams::L.c_str());
+            unique_ptr<float[]> LArray{ new float[3] };
+            fillArrayWithValuesFromString<float>(LString, LArray, 3);
+            currentParamSet->add<float>(LightSourceParams::L, move(LArray), 3);
+        }
+
+        if (currentNode->Attribute(LightSourceParams::SCALE.c_str()) != nullptr) {
+            string ScaleString = currentNode->Attribute(LightSourceParams::SCALE.c_str());
+            unique_ptr<int[]> ScaleArray{ new int[3] };
+            fillArrayWithValuesFromString<int>(ScaleString, ScaleArray, 3);
+            currentParamSet->add<int>(LightSourceParams::SCALE, move(ScaleArray), 3);
+        }
+
+        if (currentNode->Attribute(LightSourceParams::FROM.c_str()) != nullptr) {
+            string FromString = currentNode->Attribute(LightSourceParams::FROM.c_str());
+            unique_ptr<float[]> FromArray{ new float[3] };
+            fillArrayWithValuesFromString<float>(FromString, FromArray, 3);
+            currentParamSet->add<float>(LightSourceParams::FROM, move(FromArray), 3);
+        }
+
+        if (currentNode->Attribute(LightSourceParams::TO.c_str()) != nullptr) {
+            string ToString = currentNode->Attribute(LightSourceParams::TO.c_str());
+            unique_ptr<float[]> ToArray{ new float[3] };
+            fillArrayWithValuesFromString<float>(ToString, ToArray, 3);
+            currentParamSet->add<float>(LightSourceParams::TO, move(ToArray), 3);
+        }
+
+        if (currentNode->Attribute(LightSourceParams::I.c_str()) != nullptr) {
+            string IString = currentNode->Attribute(LightSourceParams::I.c_str());
+            unique_ptr<float[]> IArray{ new float[3] };
+            fillArrayWithValuesFromString<float>(IString, IArray, 3);
+            currentParamSet->add<float>(LightSourceParams::I, move(IArray), 3);
+        }
+
+        if (currentNode->Attribute(LightSourceParams::CUTOFF.c_str()) != nullptr) {
+            unique_ptr<int[]> cutoff{ new int[1] };
+            cutoff[0] = currentNode->IntAttribute(LightSourceParams::CUTOFF.c_str());
+            currentParamSet->add<int>(LightSourceParams::CUTOFF, move(cutoff), 1);
+        }
+
+        if (currentNode->Attribute(LightSourceParams::FALLOFF.c_str()) != nullptr) {
+            unique_ptr<int[]> falloff{ new int[1] };
+            falloff[0] = currentNode->IntAttribute(LightSourceParams::FALLOFF.c_str());
+            currentParamSet->add<int>(LightSourceParams::FALLOFF, move(falloff), 1);
+        }
+        API::setLight(*currentParamSet);
     } else if (tag == SceneTags::FILM) {
         unique_ptr<string[]> type{ new string[1] };
         type[0] = currentNode->Attribute(FilmParams::TYPE.c_str());

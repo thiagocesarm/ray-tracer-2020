@@ -12,6 +12,7 @@
 #include "../core/primitive.h"
 #include "../core/rt3.h"
 #include "../core/shape.h"
+#include "../core/light.h"
 #include "../materials/flatMaterial.h"
 #include "../integrators/flat_integrator.h"
 #include "../parser/paramset.h"
@@ -27,6 +28,7 @@ struct RenderOptions {
     Camera * camera;
     Film film;
     Background * background;
+    Light * light; 
     Integrator * integrator;
     Material * material;
     vector<Primitive *> objects;
@@ -45,6 +47,7 @@ class API {
         static void setObject(ParamSet & ps);
         static void setMaterial(ParamSet & ps);
         static void setIntegrator(ParamSet & ps);
+        static void setLight(ParamSet & ps);
         static void setRayTracer(RT3 & rt3);
 };
 
@@ -70,6 +73,25 @@ void API::setCamera(ParamSet & ps) {
         ro.camera = new PerspectiveCamera(fovy);
         return;
     }
+}
+
+void API::setLight(ParamSet & ps) {
+    auto type = ps.find<string>(LightSourceParams::TYPE, "");
+    auto l = ps.findArray<float>(LightSourceParams::L);
+    auto from = ps.findArray<float>(LightSourceParams::FROM);
+    auto scale = ps.findArray<int>(LightSourceParams::SCALE);
+    auto to = ps.findArray<float>(LightSourceParams::TO);
+    auto I = ps.findArray<float>(LightSourceParams::I);
+    auto cutoff = ps.find<int>(LightSourceParams::CUTOFF, 0);
+    auto falloff = ps.find<int>(LightSourceParams::FALLOFF, 0);
+
+    // if (type == LightSourceTypesParams::AMBIENT &&  l != nullptr) { 
+    //     ro.light = new Light(type, l);
+    //     return;
+    // } else if (type == CameraTypes::PERSPECTIVE && fovy > -1) {
+    //     ro.camera = new PerspectiveCamera(fovy);
+    //     return;
+    // }
 }
 
 void API::setIntegrator(ParamSet & ps) {
