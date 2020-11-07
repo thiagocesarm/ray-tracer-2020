@@ -13,9 +13,10 @@ class GeometricPrimitive: public Primitive {
         GeometricPrimitive(Shape * s, Material * m) : shape{s}, material{m} {};
 
         bool intersect( const Ray& r, Surfel *sf ) const override {
-            float previous_t_max = r.max_t;
-            bool did_intersect = shape->intersect(r, &r.max_t, sf);
-            if ( r.max_t < previous_t_max ) {
+            float t_hit = 0;
+            bool did_intersect = shape->intersect(r, &t_hit, sf);
+            if ( did_intersect ) {
+                r.max_t = t_hit;
                 sf->primitive = this;
             }
             return did_intersect;

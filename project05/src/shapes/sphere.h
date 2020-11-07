@@ -33,9 +33,7 @@ class Sphere: public Shape {
             // DELTA = B² - 4AC
             float DELTA = (pow(B, 2.0) - 4 * A * C);
 
-            if ( DELTA < 0 ) {
-                return false;
-            } else {
+            if ( DELTA >= 0 ) {
                 float t;
                 if ( DELTA == 0 ) {
                     t = -B / (2 * A);
@@ -44,14 +42,16 @@ class Sphere: public Shape {
                     float t2 = (-B - DELTA) / (2 * A);
                     t = t1 < t2 ? t1 : t2;
                 }
-                if ( t < *t_hit ) { 
+                if ( r.min_t < t && t < r.max_t ) { 
                     *t_hit = t;
                     sf->p = r(t); // set contact point
                     auto normal_point = r(t) - center;
                     sf->n = normalize(Vec3(normal_point.getX(), normal_point.getY(), normal_point.getZ())); // set normal vector
+                    return true;
                 }
-                return true;
             }
+            
+            return false;
         };
 
         bool intersect_p( Ray r ) const override { 

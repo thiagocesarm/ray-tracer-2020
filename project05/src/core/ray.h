@@ -1,13 +1,15 @@
 #ifndef _RAY_
 #define _RAY_
 
+#include <limits>
 #include "../core/vec3.h"
 #include "../core/point3D.h"
 
 
 class Ray {
     public:
-        mutable float max_t = 10000;
+        mutable float max_t = std::numeric_limits<float>::max();
+        mutable float min_t = 0;
         Ray (const Point3D& origin, const Vec3& direction ) : origin{origin}, direction{direction} { /*empty*/ }
         Vec3 getDirection() const {return direction;}
         Point3D getOrigin() const {return origin;}
