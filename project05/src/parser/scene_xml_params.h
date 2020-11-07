@@ -7,6 +7,7 @@ namespace SceneTags {
     const string FILM = "film";
     const string WORLD_BEGIN = "world_begin";
     const string BACKGROUND = "background";
+    const string LIGHT_SOURCE = "light_source";
     const string WORLD_END = "world_end";
     const string LOOK_AT = "lookat";
     const string INTEGRATOR = "integrator";
@@ -16,6 +17,25 @@ namespace SceneTags {
 
 namespace IntegratorParams {
     const string TYPE = "type";
+};
+
+namespace LightSourceParams {
+    const string TYPE = "type";
+    const string L = "l";
+    const string SCALE = "scale";
+    const string FROM = "from";
+    const string TO = "to";
+    const string I = "i";
+    const string CUTOFF = "cutoff";
+    const string FALLOFF = "fallof";
+
+};
+
+namespace LightSourceTypesParams {
+    const string AMBIENT = "ambient";
+    const string DIRECTIONAL = "directional";
+    const string POINT = "point";
+    const string SPOT = "spot";
 };
 
 namespace IntegratorTypes {
