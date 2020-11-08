@@ -20,8 +20,13 @@ class PointLight : public Light {
             from[2] = mFrom[2];
         }
         Color sample_Li( const Surfel& hit /*in*/, Vec3 *wi/*out*/) override {
-            /* TO DO */
-            return Color{ 0, 0, 0 };
+            Vec3 vecI {I[0], I[1], I[2]};
+            *wi = vecI;
+            Vec3 vecFrom {from[0], from[1], from[2]};
+            Vec3 vecHit {hit.p.getX(), hit.p.getY(), hit.p.getZ()};
+            Vec3 pointVec = vecFrom - vecHit;
+            pointVec = normalize(pointVec);
+            return Color{pointVec.r(), pointVec.g(), pointVec.b()};
         }
 };
 

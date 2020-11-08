@@ -24,8 +24,13 @@ class DirectionalLight : public Light {
             to[2] = mTo[2];
         }
         Color sample_Li( const Surfel& hit /*in*/, Vec3 *wi/*out*/) override {
-            /* TO DO */
-            return Color{ 0, 0, 0 };
+            Vec3 vecL {L[0], L[1], L[2]};
+            *wi = vecL;
+            Vec3 vecFrom {from[0], from[1], from[2]};
+            Vec3 vecTo {to[0], to[1], to[2]};
+            Vec3 directionalVec = vecTo - vecFrom;
+            directionalVec = normalize(-directionalVec);
+            return Color{directionalVec.r(), directionalVec.g(), directionalVec.b()};
         }
 };
 

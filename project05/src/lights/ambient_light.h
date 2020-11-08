@@ -12,8 +12,9 @@ class AmbientLight : public Light {
             L[2] = mL[2];
         }
         Color sample_Li( const Surfel& hit /*in*/, Vec3 *wi/*out*/) override {
-            /* TO DO */
-            return Color{ 0, 0, 0 };
+            Vec3 vecL {L[0], L[1], L[2]};
+            *wi = vecL;
+            return Color{ L[0], L[1], L[2] };
         }
 };
 
