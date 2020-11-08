@@ -8,6 +8,11 @@
 #include "../parser/scene_xml_params.h"
 #include "../core/api.h"
 #include "../core/rt3.h"
+#include "../core/light.h"
+#include "../lights/ambient_light.h"
+#include "../lights/directional_light.h"
+#include "../lights/spot_light.h"
+#include "../lights/point_light.h"
 
 using namespace std;
 using namespace tinyxml2;
