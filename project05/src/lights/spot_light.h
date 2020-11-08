@@ -4,8 +4,6 @@
 #include "../core/light.h"
 #include <math.h>
 
-#define PI 3.14159265
-
 class SpotLight : public Light {
     public:
         float I[3];
@@ -37,8 +35,6 @@ class SpotLight : public Light {
             Vec3 pointVec = vecFrom - vecHit;
             pointVec = normalize(pointVec);
 
-
-            Vec3 vecFrom {from[0], from[1], from[2]};
             Vec3 vecTo {to[0], to[1], to[2]};
             Vec3 directionalVec = vecTo - vecFrom;
             directionalVec = normalize(-directionalVec);
