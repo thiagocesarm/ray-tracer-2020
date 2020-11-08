@@ -15,8 +15,9 @@ class FlatIntegrator: public SamplerIntegrator {
                 L = bkg_color;
             } else {
                 // Old approach
-                // L = isect.primitive->getMaterial()->getColor();
-                
+                // FlatMaterial *fm = dynamic_cast< FlatMaterial *>( isect.primitive->getMaterial() );
+                // L = fm->getColor();
+
                 Point3D light_pos{ 1, 3, 3};     // Point light location    (hardcoded here, for now)
                 Vec3 light_I{ 0.9, 0.9, 0.9 };   // Point light Intensity   (hardcoded here, for now)
                 Vec3 kd{ 0.9, 0.1, 0.1 };        // Redish diffuse material (hardcoded here, for now)

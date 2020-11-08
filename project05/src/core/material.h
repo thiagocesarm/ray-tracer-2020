@@ -3,13 +3,15 @@
 
 #include <iostream>
 #include "../core/color.h"
+#include "../core/ray.h"
+#include "../core/surfel.h"
 
 using namespace std;
 
 class Material {
     public:
         Material(){ /* empty */ };
-        virtual Color getColor() const = 0;
+        virtual void scatter( Surfel * isect, Ray * r ) = 0;
 };
 
 #endif

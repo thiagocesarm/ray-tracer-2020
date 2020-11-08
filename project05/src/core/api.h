@@ -3,10 +3,6 @@
 
 #include "../cameras/orthographic.h"
 #include "../cameras/perspective.h"
-#include "../lights/ambient_light.h"
-#include "../lights/directional_light.h"
-#include "../lights/point_light.h"
-#include "../lights/spot_light.h"
 #include "../core/background.h"
 #include "../core/camera.h"
 #include "../core/film.h"
@@ -18,12 +14,17 @@
 #include "../core/shape.h"
 #include "../core/light.h"
 #include "../materials/flatMaterial.h"
+#include "../materials/blinn_phong_material.h"
 #include "../integrators/flat_integrator.h"
 #include "../parser/paramset.h"
 #include "../parser/scene_xml_params.h"
 #include "../primitives/aggregate.h"
 #include "../primitives/geometric_primitive.h"
 #include "../shapes/sphere.h"
+#include "../lights/ambient_light.h"
+#include "../lights/directional_light.h"
+#include "../lights/point_light.h"
+#include "../lights/spot_light.h"
 
 using namespace std;
 
@@ -32,7 +33,7 @@ struct RenderOptions {
     Camera * camera;
     Film film;
     Background * background;
-    Light * light; 
+    vector<Light *> lights; 
     Integrator * integrator;
     Material * material;
     vector<Primitive *> objects;
@@ -89,12 +90,13 @@ void API::setLight(ParamSet & ps) {
     auto cutoff = ps.find<int>(LightSourceParams::CUTOFF, 0);
     auto falloff = ps.find<int>(LightSourceParams::FALLOFF, 0);
 
-    if (type == LightSourceTypesParams::AMBIENT &&  l != nullptr) { 
+    if (type == LightSourceTypesParams::AMBIENT && l != nullptr) {
         float L [3];
         L[0] = l[0];
         L[1] = l[1];
         L[2] = l[2];
-        ro.light = new AmbientLight(L);
+        
+        ro.lights.push_back(new AmbientLight(L));
         return;
     } else if (type == LightSourceTypesParams::DIRECTIONAL &&  l != nullptr && scale != nullptr && from != nullptr && to != nullptr) {
         float L [3];
@@ -113,8 +115,8 @@ void API::setLight(ParamSet & ps) {
         mTo[0] = to[0];
         mTo[1] = to[1];
         mTo[2] = to[2];
-
-        ro.light = new DirectionalLight(L, mScale, mFrom, mTo);
+        
+        ro.lights.push_back(new DirectionalLight(L, mScale, mFrom, mTo));
         return;
     } else if (type == LightSourceTypesParams::POINT &&  I != nullptr && scale != nullptr && from != nullptr) {
         float mI [3];
@@ -130,10 +132,9 @@ void API::setLight(ParamSet & ps) {
         mFrom[1] = from[2];
         mFrom[2] = from[2];
 
-        ro.light = new PointLight(mI, mScale, mFrom);
+        ro.lights.push_back(new PointLight(mI, mScale, mFrom));
         return;
-
-    } else if (type == LightSourceTypesParams::SPOT &&  I != nullptr && scale != nullptr && from != nullptr) {
+    } else if (type == LightSourceTypesParams::SPOT &&  I != nullptr && scale != nullptr && from != nullptr && to != nullptr) {
         float mI [3];
         mI[0] = I[0];
         mI[1] = I[1];
@@ -151,7 +152,7 @@ void API::setLight(ParamSet & ps) {
         mTo[1] = to[1];
         mTo[2] = to[2];
 
-        ro.light = new SpotLight(mI, mScale, mFrom, mTo, cutoff, falloff);
+        ro.lights.push_back(new SpotLight(mI, mScale, mFrom, mTo, cutoff, falloff));
         return;
     }
 }
@@ -187,13 +188,26 @@ void API::setFilm(ParamSet & ps) {
 }
 
 void API::setMaterial(ParamSet & ps) {
-    auto type = ps.find<string>(MaterialParams::TYPE, MaterialTypes::FLAT);
-    auto color = ps.findArray<float>(MaterialParams::COLOR);
+    auto type = ps.find<string>(MaterialParams::TYPE, "");
 
-    if (type == MaterialTypes::FLAT){
+    if (type == MaterialTypes::FLAT) {
+        auto color = ps.findArray<float>(FlatMaterialParams::COLOR);
         ro.material = new FlatMaterial(Color(color[0],color[1],color[2]));
-    }
+    } else if (type == MaterialTypes::BLINN_PHONG) {
+        auto ambient = ps.findArray<float>(BlinnPhongMaterialParams::AMBIENT);
+        auto diffuse = ps.findArray<float>(BlinnPhongMaterialParams::DIFFUSE);
+        auto specular = ps.findArray<float>(BlinnPhongMaterialParams::SPECULAR);
+        auto mirror = ps.findArray<float>(BlinnPhongMaterialParams::MIRROR);
+        auto glossiness = ps.find<int>(BlinnPhongMaterialParams::GLOSSINESS, 0);
 
+        ro.material = new BlinnPhongMaterial (
+            Vec3(ambient[0], ambient[1], ambient[2]),
+            Vec3(diffuse[0], diffuse[1], diffuse[2]),
+            Vec3(specular[0], specular[1], specular[2]),
+            Vec3(mirror[0], mirror[1], mirror[2]),
+            glossiness
+        );
+    }
 }
 
 void API::setObject(ParamSet & ps) {
