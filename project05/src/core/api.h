@@ -16,6 +16,7 @@
 #include "../materials/flatMaterial.h"
 #include "../materials/blinn_phong_material.h"
 #include "../integrators/flat_integrator.h"
+#include "../integrators/blinn_phong_integrator.h"
 #include "../parser/paramset.h"
 #include "../parser/scene_xml_params.h"
 #include "../primitives/aggregate.h"
@@ -162,6 +163,9 @@ void API::setIntegrator(ParamSet & ps) {
 
     if (type == IntegratorTypes::FLAT) {
         ro.integrator = new FlatIntegrator(ro.camera);
+    } else if (type == IntegratorTypes::BLINN) {
+        auto depth = ps.find<int>(IntegratorParams::DEPTH, 1);
+        ro.integrator = new BlinnPhongIntegrator(ro.camera, depth);
     }
 }
 

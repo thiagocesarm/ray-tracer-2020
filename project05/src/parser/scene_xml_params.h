@@ -17,6 +17,12 @@ namespace SceneTags {
 
 namespace IntegratorParams {
     const string TYPE = "type";
+    const string DEPTH = "depth";
+};
+
+namespace IntegratorTypes {
+    const string FLAT = "flat";
+    const string BLINN = "blinn_phong";
 };
 
 namespace LightSourceParams {
@@ -36,10 +42,6 @@ namespace LightSourceTypesParams {
     const string DIRECTIONAL = "directional";
     const string POINT = "point";
     const string SPOT = "spot";
-};
-
-namespace IntegratorTypes {
-    const string FLAT = "flat";
 };
 
 namespace MaterialParams {

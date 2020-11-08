@@ -208,7 +208,11 @@ void Parser::processTag(XMLElement * currentNode) {
         type[0] = currentNode->Attribute(IntegratorParams::TYPE.c_str());
         currentParamSet->add<string>(IntegratorParams::TYPE, move(type), 1);
 
-        API::setIntegrator(*currentParamSet);    
+        unique_ptr<int[]> depth{ new int[1] };
+        depth[0] = currentNode->FloatAttribute(IntegratorParams::DEPTH.c_str());
+        currentParamSet->add<int>(IntegratorParams::DEPTH, move(depth), 1);
+
+        API::setIntegrator(*currentParamSet);
     } else if (tag == SceneTags::MATERIAL) {
         unique_ptr<string[]> type{ new string[1] };
         type[0] = currentNode->Attribute(MaterialParams::TYPE.c_str());
