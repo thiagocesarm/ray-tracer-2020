@@ -3,7 +3,7 @@
 
 #include "../core/light.h"
 
-class DirectionalLight : Light {
+class DirectionalLight : public Light {
     public:
         float L[3];
         float scale[3];

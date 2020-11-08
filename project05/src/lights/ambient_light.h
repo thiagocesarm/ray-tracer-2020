@@ -3,10 +3,10 @@
 
 #include "../core/light.h"
 
-class AmbientLight : Light {
+class AmbientLight : public Light {
     public:
         float L[3];
-        AmbientLight(float mL[]) : Light(light_type_e::directional) {
+        AmbientLight(float mL[]) : Light(light_type_e::ambient) {
             L[0] = mL[0];
             L[1] = mL[1];
             L[2] = mL[2];

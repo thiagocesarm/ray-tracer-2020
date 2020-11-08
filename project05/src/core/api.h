@@ -3,6 +3,10 @@
 
 #include "../cameras/orthographic.h"
 #include "../cameras/perspective.h"
+#include "../lights/ambient_light.h"
+#include "../lights/directional_light.h"
+#include "../lights/point_light.h"
+#include "../lights/spot_light.h"
 #include "../core/background.h"
 #include "../core/camera.h"
 #include "../core/film.h"
@@ -85,13 +89,71 @@ void API::setLight(ParamSet & ps) {
     auto cutoff = ps.find<int>(LightSourceParams::CUTOFF, 0);
     auto falloff = ps.find<int>(LightSourceParams::FALLOFF, 0);
 
-    // if (type == LightSourceTypesParams::AMBIENT &&  l != nullptr) { 
-    //     ro.light = new Light(type, l);
-    //     return;
-    // } else if (type == CameraTypes::PERSPECTIVE && fovy > -1) {
-    //     ro.camera = new PerspectiveCamera(fovy);
-    //     return;
-    // }
+    if (type == LightSourceTypesParams::AMBIENT &&  l != nullptr) { 
+        float L [3];
+        L[0] = l[0];
+        L[1] = l[1];
+        L[2] = l[2];
+        ro.light = new AmbientLight(L);
+        return;
+    } else if (type == LightSourceTypesParams::DIRECTIONAL &&  l != nullptr && scale != nullptr && from != nullptr && to != nullptr) {
+        float L [3];
+        L[0] = l[0];
+        L[1] = l[1];
+        L[2] = l[2];
+        float mScale [3];
+        mScale[0] = scale[0];
+        mScale[1] = scale[1];
+        mScale[2] = scale[2];
+        float mFrom [3];
+        mFrom[0] = mFrom[0];
+        mFrom[1] = from[2];
+        mFrom[2] = from[2];
+        float mTo [3];
+        mTo[0] = to[0];
+        mTo[1] = to[1];
+        mTo[2] = to[2];
+
+        ro.light = new DirectionalLight(L, mScale, mFrom, mTo);
+        return;
+    } else if (type == LightSourceTypesParams::POINT &&  I != nullptr && scale != nullptr && from != nullptr) {
+        float mI [3];
+        mI[0] = I[0];
+        mI[1] = I[1];
+        mI[2] = I[2];
+        float mScale [3];
+        mScale[0] = scale[0];
+        mScale[1] = scale[1];
+        mScale[2] = scale[2];
+        float mFrom [3];
+        mFrom[0] = mFrom[0];
+        mFrom[1] = from[2];
+        mFrom[2] = from[2];
+
+        ro.light = new PointLight(mI, mScale, mFrom);
+        return;
+
+    } else if (type == LightSourceTypesParams::SPOT &&  I != nullptr && scale != nullptr && from != nullptr) {
+        float mI [3];
+        mI[0] = I[0];
+        mI[1] = I[1];
+        mI[2] = I[2];
+        float mScale [3];
+        mScale[0] = scale[0];
+        mScale[1] = scale[1];
+        mScale[2] = scale[2];
+        float mFrom [3];
+        mFrom[0] = mFrom[0];
+        mFrom[1] = from[2];
+        mFrom[2] = from[2];
+        float mTo [3];
+        mTo[0] = to[0];
+        mTo[1] = to[1];
+        mTo[2] = to[2];
+
+        ro.light = new SpotLight(mI, mScale, mFrom, mTo, cutoff, falloff);
+        return;
+    }
 }
 
 void API::setIntegrator(ParamSet & ps) {

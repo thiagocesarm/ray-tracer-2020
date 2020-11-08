@@ -3,7 +3,7 @@
 
 #include "../core/light.h"
 
-class SpotLight : Light {
+class SpotLight : public Light {
     public:
         float I[3];
         float scale[3];

@@ -13,7 +13,7 @@ enum class light_type_e : int {
 };
 
 class Light {
-	public:
+	private:
 		light_type_e type;
 	public:
 		virtual ~Light(){};
