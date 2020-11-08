@@ -4,16 +4,21 @@
 #include "../core/material.h"
 
 class FlatMaterial : public Material {
-    public:
+    private:
         Color color;
 
+    public:
         FlatMaterial(
             Color color
         ) {
             this->color = color;
         };
 
-        Color getColor() const override {
+        void scatter( Surfel *isect, Ray *r ) override {
+            /* TO DO */
+        }
+
+        Color getColor() const {
             return color;
         };
 };

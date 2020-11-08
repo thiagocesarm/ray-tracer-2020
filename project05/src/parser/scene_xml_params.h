@@ -21,11 +21,11 @@ namespace IntegratorParams {
 
 namespace LightSourceParams {
     const string TYPE = "type";
-    const string L = "l";
+    const string L = "L";
     const string SCALE = "scale";
     const string FROM = "from";
     const string TO = "to";
-    const string I = "i";
+    const string I = "I";
     const string CUTOFF = "cutoff";
     const string FALLOFF = "fallof";
 
@@ -44,11 +44,23 @@ namespace IntegratorTypes {
 
 namespace MaterialParams {
     const string TYPE = "type";
+};
+
+namespace FlatMaterialParams {
     const string COLOR = "color";
+};
+
+namespace BlinnPhongMaterialParams {
+    const string AMBIENT = "ambient";
+    const string DIFFUSE = "diffuse";
+    const string SPECULAR = "specular";
+    const string MIRROR = "mirror";
+    const string GLOSSINESS = "glossiness";
 };
 
 namespace MaterialTypes {
     const string FLAT = "flat";
+    const string BLINN_PHONG = "blinn";
 };
 
 namespace ObjectParams {

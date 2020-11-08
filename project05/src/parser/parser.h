@@ -212,12 +212,40 @@ void Parser::processTag(XMLElement * currentNode) {
     } else if (tag == SceneTags::MATERIAL) {
         unique_ptr<string[]> type{ new string[1] };
         type[0] = currentNode->Attribute(MaterialParams::TYPE.c_str());
+        string materialType = type.get()[0];
         currentParamSet->add<string>(MaterialParams::TYPE, move(type), 1);
 
-        string colorsString = currentNode->Attribute(MaterialParams::COLOR.c_str());
-        unique_ptr<float[]> colorsArray( new float[3] );
-        fillArrayWithValuesFromString<float>(colorsString, colorsArray, 3);
-        currentParamSet->add<float>(MaterialParams::COLOR, move(colorsArray), 3);
+        if (materialType == MaterialTypes::FLAT) {
+            string colorsString = currentNode->Attribute(FlatMaterialParams::COLOR.c_str());
+            unique_ptr<float[]> colorsArray( new float[3] );
+            fillArrayWithValuesFromString<float>(colorsString, colorsArray, 3);
+            currentParamSet->add<float>(FlatMaterialParams::COLOR, move(colorsArray), 3);
+        } else if (materialType == MaterialTypes::BLINN_PHONG) {
+            string ambientSring = currentNode->Attribute(BlinnPhongMaterialParams::AMBIENT.c_str());
+            unique_ptr<float[]> ambientArray( new float[3] );
+            fillArrayWithValuesFromString<float>(ambientSring, ambientArray, 3);
+            currentParamSet->add<float>(BlinnPhongMaterialParams::AMBIENT, move(ambientArray), 3);
+
+            string diffuseSring = currentNode->Attribute(BlinnPhongMaterialParams::DIFFUSE.c_str());
+            unique_ptr<float[]> diffuseArray( new float[3] );
+            fillArrayWithValuesFromString<float>(diffuseSring, diffuseArray, 3);
+            currentParamSet->add<float>(BlinnPhongMaterialParams::DIFFUSE, move(diffuseArray), 3);
+
+            string specularSring = currentNode->Attribute(BlinnPhongMaterialParams::SPECULAR.c_str());
+            unique_ptr<float[]> specularArray( new float[3] );
+            fillArrayWithValuesFromString<float>(specularSring, specularArray, 3);
+            currentParamSet->add<float>(BlinnPhongMaterialParams::SPECULAR, move(specularArray), 3);
+
+            string mirrorSring = currentNode->Attribute(BlinnPhongMaterialParams::MIRROR.c_str());
+            unique_ptr<float[]> mirrorArray( new float[3] );
+            fillArrayWithValuesFromString<float>(mirrorSring, mirrorArray, 3);
+            currentParamSet->add<float>(BlinnPhongMaterialParams::MIRROR, move(mirrorArray), 3);
+
+            unique_ptr<int[]> glossines{ new int[1] };
+            glossines[0] = currentNode->IntAttribute(BlinnPhongMaterialParams::GLOSSINESS.c_str());
+            currentParamSet->add<int>(SphereParams::RADIUS, move(glossines), 1);
+        }
+
         
         API::setMaterial(*currentParamSet);
     } else if (tag == SceneTags::OBJECT) {
