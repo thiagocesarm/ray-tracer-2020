@@ -5,16 +5,15 @@
 
 class AmbientLight : public Light {
     public:
-        float L[3];
-        AmbientLight(float mL[]) : Light(light_type_e::ambient) {
-            L[0] = mL[0];
-            L[1] = mL[1];
-            L[2] = mL[2];
+        Vec3 L;
+
+        AmbientLight(Vec3 mL) : Light(light_type_e::ambient) {
+            L = mL;
         }
+        
         Color sample_Li( const Surfel& hit /*in*/, Vec3 *wi/*out*/) override {
-            Vec3 vecL {L[0], L[1], L[2]};
-            *wi = vecL;
-            return Color{ L[0], L[1], L[2] };
+            *wi = L;
+            return Color{ L.r(), L.g(), L.b() };
         }
 };
 

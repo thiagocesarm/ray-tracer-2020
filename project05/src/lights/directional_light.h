@@ -5,32 +5,23 @@
 
 class DirectionalLight : public Light {
     public:
-        float L[3];
-        float scale[3];
-        float from[3];
-        float to[3];
-        DirectionalLight(float mL[], float mScale[], float mFrom[], float mTo[]) : Light(light_type_e::ambient) {
-            L[0] = mL[0];
-            L[1] = mL[1];
-            L[2] = mL[2];
-            scale[0] = mScale[0];
-            scale[1] = mScale[1];
-            scale[2] = mScale[2];
-            from[0] = mFrom[0];
-            from[1] = mFrom[2];
-            from[2] = mFrom[2];
-            to[0] = mTo[0];
-            to[1] = mTo[1];
-            to[2] = mTo[2];
+        Vec3 L;
+        Vec3 scale;
+        Vec3 from;
+        Vec3 to;
+
+        DirectionalLight(Vec3 mL, Vec3 mScale, Vec3 mFrom, Vec3 mTo) : Light(light_type_e::ambient) {
+            L = mL;
+            scale = mScale;
+            from = mFrom;
+            to = mTo;
         }
+        
         Color sample_Li( const Surfel& hit /*in*/, Vec3 *wi/*out*/) override {
-            Vec3 vecL {L[0], L[1], L[2]};
-            *wi = vecL;
-            Vec3 vecFrom {from[0], from[1], from[2]};
-            Vec3 vecTo {to[0], to[1], to[2]};
-            Vec3 directionalVec = vecTo - vecFrom;
+            *wi = L;
+            Vec3 directionalVec = to - from;
             directionalVec = normalize(-directionalVec);
-            return Color{directionalVec.r(), directionalVec.g(), directionalVec.b()};
+            return Color{ directionalVec.r(), directionalVec.g(), directionalVec.b() };
         }
 };
 
