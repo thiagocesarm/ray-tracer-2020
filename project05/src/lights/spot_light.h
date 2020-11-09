@@ -48,7 +48,7 @@ class SpotLight : public Light {
                 *wi = I * intensity;
             }
 
-            return Color{ vecHit.r(), vecHit.g(), vecHit.b() };
+            return Color{ pointVec.r(), pointVec.g(), pointVec.b() };
         }
 };
 

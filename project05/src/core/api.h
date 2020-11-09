@@ -223,7 +223,7 @@ void API::setRayTracer(RT3 & rt3) {
     finishCameraSetup();
     rt3.camera = ro.camera;
     rt3.integrator = ro.integrator;
-    rt3.scene = new Scene( ro.background, shared_ptr<PrimList>( new PrimList(ro.objects) ) );
+    rt3.scene = new Scene( ro.background, shared_ptr<PrimList>( new PrimList(ro.objects) ), ro.lights );
 }
 
 void API::finishCameraSetup() {
