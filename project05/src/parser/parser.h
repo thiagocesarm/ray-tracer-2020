@@ -247,7 +247,7 @@ void Parser::processTag(XMLElement * currentNode) {
 
             unique_ptr<int[]> glossines{ new int[1] };
             glossines[0] = currentNode->IntAttribute(BlinnPhongMaterialParams::GLOSSINESS.c_str());
-            currentParamSet->add<int>(SphereParams::RADIUS, move(glossines), 1);
+            currentParamSet->add<int>(BlinnPhongMaterialParams::GLOSSINESS, move(glossines), 1);
         }
 
         
