@@ -35,12 +35,16 @@ class BlinnPhongIntegrator: public SamplerIntegrator {
                     // o h pode ser um l+v/||l+v|| esse valor de h é do material de selan
                     Vec3 vecH = normalize( vecL + normalize( -ray.getDirection() ) ); // nao ta seguindo a recomendação de selan mas sim o material que ele passou referente ao blinnphong
                     float maxValue = max(0.f, dot(vecN, vecH));
-                    result += kd * I * max( 0.f, dot( vecN, vecL )) + ks * I * pow(maxValue, glossiness); // light_I é variável de acordo com a luz da vez entao tem que ser algo tipo lights[i].i
+                    result += kd * I * max( 0.f, dot( vecN, vecL )); + ks * I * pow(maxValue, glossiness); // light_I é variável de acordo com a luz da vez entao tem que ser algo tipo lights[i].i
                 }
 
                 result = ka * lightAmbient + result; // coeficientee que ka vem do arquivo de cena assim como a luz ambiente
+                float r = result.r() > 1 ? 1.0 : result.r();
+                float g = result.g() > 1 ? 1.0 : result.g();
+                float b = result.b() > 1 ? 1.0 : result.b();
+                L = Color(r, g, b);
 
-                L = Color(result.r(), result.g(), result.b());;
+                //L = Color(result.r(), result.g(), result.b());;
             }
             return L;
         }

@@ -36,16 +36,15 @@ class SpotLight : public Light {
 
             float theta = dot(pointVec, directionalVec);
 
-            float cutoffCoss = cos(cutoff * PI / 180.0);
-            float falloffCoss = cos(falloff * PI / 180.0);
+            float cutoffCoss = cos(cutoff);
+            float falloffCoss = cos(falloff);
 
-            if (theta <= cutoffCoss) {
+            if (theta < cutoffCoss) {
                 *wi = I * 0.0; //should be in the shadow outsite the spotlight
-            } else if (theta >= falloffCoss){
-                *wi = I * 1.0; //should be in the middle of the spotlight
+            } else if (theta > falloffCoss){
+                *wi = I; //should be in the middle of the spotlight
             } else {
-                float intensity = (theta - falloffCoss)/cutoffCoss - falloffCoss;
-                *wi = I * intensity;
+                *wi = I * 0.6;//((theta - falloffCoss)/(cutoffCoss - falloffCoss));
             }
 
             return Color{ pointVec.r(), pointVec.g(), pointVec.b() };
