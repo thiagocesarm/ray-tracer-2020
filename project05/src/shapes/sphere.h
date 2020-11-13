@@ -22,24 +22,25 @@ class Sphere: public Shape {
         
         bool intersect( Ray r, float * t_hit, Surfel *sf ) const override {
             Point3D origin_center_vec = r.getOrigin() - center;
-            // B = 2 (o - c) dot d
-            float B = dot( Vec3(2 * origin_center_vec.getX(), 2 * origin_center_vec.getY(), 2 * origin_center_vec.getZ()), r.getDirection() );
+            // B = (o - c) dot d
+            float B = dot( Vec3( origin_center_vec.getX(), origin_center_vec.getY(), origin_center_vec.getZ()), r.getDirection() );
             // A = d dot d
             float A = dot( r.getDirection(), r.getDirection() );
             // C = (o - c) dot (o - c) - r²
             float C = dot( Vec3(origin_center_vec.getX(), origin_center_vec.getY(), origin_center_vec.getZ()), Vec3(origin_center_vec.getX(), origin_center_vec.getY(), origin_center_vec.getZ()) );
             C = C - pow(radius, 2.0);
 
-            // DELTA = B² - 4AC
-            float DELTA = (pow(B, 2.0) - 4 * A * C);
+            // using simplified equation
+            // DELTA = B² - AC
+            float DELTA = (pow(B, 2.0) - A * C);
 
             if ( DELTA >= 0 ) {
                 float t;
                 if ( DELTA == 0 ) {
                     t = -B / (2 * A);
                 } else {
-                    float t1 = (-B + DELTA) / (2 * A);
-                    float t2 = (-B - DELTA) / (2 * A);
+                    float t1 = ( -B + sqrt(DELTA) ) / A;
+                    float t2 = ( -B - sqrt(DELTA) ) / A;
                     t = t1 < t2 ? t1 : t2;
                 }
                 if ( r.min_t < t && t < r.max_t ) { 

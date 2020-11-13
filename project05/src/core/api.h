@@ -58,9 +58,9 @@ class API {
 };
 
 void API::setLookAt(ParamSet & ps) {
-    auto lookAt = ps.findArray<int>(LookAtParams::LOOK_AT);
-    auto lookFrom = ps.findArray<int>(LookAtParams::LOOK_FROM);
-    auto up = ps.findArray<int>(LookAtParams::UP);
+    auto lookAt = ps.findArray<float>(LookAtParams::LOOK_AT);
+    auto lookFrom = ps.findArray<float>(LookAtParams::LOOK_FROM);
+    auto up = ps.findArray<float>(LookAtParams::UP);
 
     ro.lookAt = LookAt(Point3D(lookFrom[0], lookFrom[1], lookFrom[2]),
                        Point3D(lookAt[0], lookAt[1], lookAt[2]), 

@@ -37,7 +37,7 @@ class Camera {
             // Positive w pointing towards the positive Z axis.
             w = normalize(gaze);
             // vup and w are on the same plane; we need a vector perpendicular to this plane.
-            u = normalize( cross( vup, w ) );
+            u = normalize( cross( w, vup ) );
             // Finally, we just need the 3rd orthonormal vector of our new camera basis.
             v = normalize( cross ( w, u ) );
             // By default, the view plane normal is perpendicular to the camera's w axis.

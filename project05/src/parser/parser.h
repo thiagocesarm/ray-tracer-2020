@@ -272,19 +272,19 @@ void Parser::processTag(XMLElement * currentNode) {
         API::setObject(*currentParamSet);
     } else if (tag == SceneTags::LOOK_AT) {
         string lookAtString = currentNode->Attribute(LookAtParams::LOOK_AT.c_str());
-        unique_ptr<int[]> lookAtArray( new int[3] );
-        fillArrayWithValuesFromString<int>(lookAtString, lookAtArray, 3);
-        currentParamSet->add<int>(LookAtParams::LOOK_AT, move(lookAtArray), 3);
+        unique_ptr<float[]> lookAtArray( new float[3] );
+        fillArrayWithValuesFromString<float>(lookAtString, lookAtArray, 3);
+        currentParamSet->add<float>(LookAtParams::LOOK_AT, move(lookAtArray), 3);
 
         string lookFromString = currentNode->Attribute(LookAtParams::LOOK_FROM.c_str());
-        unique_ptr<int[]> lookFromArray( new int[3] );
-        fillArrayWithValuesFromString<int>(lookFromString, lookFromArray, 3);
-        currentParamSet->add<int>(LookAtParams::LOOK_FROM, move(lookFromArray), 3);
+        unique_ptr<float[]> lookFromArray( new float[3] );
+        fillArrayWithValuesFromString<float>(lookFromString, lookFromArray, 3);
+        currentParamSet->add<float>(LookAtParams::LOOK_FROM, move(lookFromArray), 3);
 
         string upString = currentNode->Attribute(LookAtParams::UP.c_str());
-        unique_ptr<int[]> upArray( new int[3] );
-        fillArrayWithValuesFromString<int>(upString, upArray, 3);
-        currentParamSet->add<int>(LookAtParams::UP, move(upArray), 3);
+        unique_ptr<float[]> upArray( new float[3] );
+        fillArrayWithValuesFromString<float>(upString, upArray, 3);
+        currentParamSet->add<float>(LookAtParams::UP, move(upArray), 3);
         
         API::setLookAt(*currentParamSet);
     }
