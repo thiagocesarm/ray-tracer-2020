@@ -20,6 +20,11 @@ class Light {
 		Light( light_type_e type ) {
             this->type = type;
         }
+
+		light_type_e getType() {
+			return type;
+		}
+
 		virtual Color sample_Li( const Surfel& hit /*in*/,
 								   Vec3 *wi/*out*/) = 0;
 };

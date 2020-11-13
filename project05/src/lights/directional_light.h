@@ -10,7 +10,7 @@ class DirectionalLight : public Light {
         Vec3 from;
         Vec3 to;
 
-        DirectionalLight(Vec3 mL, Vec3 mScale, Vec3 mFrom, Vec3 mTo) : Light(light_type_e::ambient) {
+        DirectionalLight(Vec3 mL, Vec3 mScale, Vec3 mFrom, Vec3 mTo) : Light(light_type_e::directional) {
             L = mL;
             scale = mScale;
             from = mFrom;
