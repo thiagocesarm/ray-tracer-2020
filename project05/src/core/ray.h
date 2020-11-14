@@ -11,6 +11,7 @@ class Ray {
         mutable float max_t = std::numeric_limits<float>::max();
         mutable float min_t = 0;
         Ray (const Point3D& origin, const Vec3& direction ) : origin{origin}, direction{direction} { /*empty*/ }
+        Ray (const Point3D& origin, const Vec3& direction, float max, float min) : origin{origin}, direction{direction}, max_t(max), min_t(min) { /*empty*/ }
         Vec3 getDirection() const {return direction;}
         Point3D getOrigin() const {return origin;}
         void setDirection(Vec3 direction) {this->direction = direction;}

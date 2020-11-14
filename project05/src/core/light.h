@@ -15,6 +15,8 @@ enum class light_type_e : int {
 class Light {
 	private:
 		light_type_e type;
+        Vec3 from;
+        string type_string;
 	public:
 		virtual ~Light(){};
 		Light( light_type_e type ) {
@@ -25,6 +27,10 @@ class Light {
 			return type;
 		}
 
+        string getTypeString() {return type_string;}
+        void setType(string mType) {this->type_string = mType;}
+        Vec3 getFrom() {return from;}
+        void setFrom(Vec3 vec){from = vec;}
 		virtual Color sample_Li( const Surfel& hit /*in*/,
 								   Vec3 *wi/*out*/) = 0;
 };

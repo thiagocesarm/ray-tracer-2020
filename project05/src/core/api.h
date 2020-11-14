@@ -93,29 +93,39 @@ void API::setLight(ParamSet & ps) {
 
     if (type == LightSourceTypesParams::AMBIENT && L != nullptr) {
         Vec3 vecL = Vec3(L[0], L[1], L[2]);
-        ro.lights.push_back(new AmbientLight(vecL));
+        AmbientLight *al = new AmbientLight(vecL);
+        al->setType("ambient");
+        al->setFrom(vecL);
+        ro.lights.push_back(al);
         return;
     } else if (type == LightSourceTypesParams::DIRECTIONAL &&  L != nullptr && scale != nullptr && from != nullptr && to != nullptr) {
         Vec3 vecL = Vec3(L[0], L[1], L[2]);
         Vec3 vecScale = Vec3(scale[0], scale[1], scale[2]);
         Vec3 vecFrom = Vec3(from[0], from[1], from[2]);
         Vec3 vecTo = Vec3(to[0], to[1], to[2]);
-        ro.lights.push_back(new DirectionalLight(vecL, vecScale, vecFrom, vecTo));
+        DirectionalLight *dl = new DirectionalLight(vecL, vecScale, vecFrom, vecTo);
+        dl->setType("directional");
+        dl->setFrom(vecFrom);
+        ro.lights.push_back(dl);
         return;
     } else if (type == LightSourceTypesParams::POINT &&  I != nullptr && scale != nullptr && from != nullptr) {
         Vec3 vecI = Vec3(I[0], I[1], I[2]);
         Vec3 vecScale = Vec3(scale[0], scale[1], scale[2]);
         Vec3 vecFrom = Vec3(from[0], from[1], from[2]);
-
-        ro.lights.push_back(new PointLight(vecI, vecScale, vecFrom));
+        PointLight *pl = new PointLight(vecI, vecScale, vecFrom);
+        pl->setType("point");
+        pl->setFrom(vecFrom);
+        ro.lights.push_back(pl);
         return;
     } else if (type == LightSourceTypesParams::SPOT &&  I != nullptr && scale != nullptr && from != nullptr && to != nullptr) {
         Vec3 vecI = Vec3(I[0], I[1], I[2]);
         Vec3 vecScale = Vec3(scale[0], scale[1], scale[2]);
         Vec3 vecFrom = Vec3(from[0], from[1], from[2]);
         Vec3 vecTo = Vec3(to[0], to[1], to[2]);
-
-        ro.lights.push_back(new SpotLight(vecI, vecScale, vecFrom, vecTo, cutoff, falloff));
+        SpotLight *sl = new SpotLight(vecI, vecScale, vecFrom, vecTo, cutoff, falloff);
+        sl->setType("spot");
+        sl->setFrom(vecFrom);
+        ro.lights.push_back(sl);
         return;
     }
 }
@@ -223,7 +233,7 @@ void API::setRayTracer(RT3 & rt3) {
     finishCameraSetup();
     rt3.camera = ro.camera;
     rt3.integrator = ro.integrator;
-    rt3.scene = new Scene( ro.background, shared_ptr<PrimList>( new PrimList(ro.objects) ), ro.lights );
+    rt3.scene = new Scene( ro.background, shared_ptr<PrimList>( new PrimList(ro.objects) ), ro.lights, ro.objects );
 }
 
 void API::finishCameraSetup() {

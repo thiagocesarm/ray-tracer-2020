@@ -27,6 +27,7 @@ class BlinnPhongIntegrator: public SamplerIntegrator {
                 auto vecN = isect.n ;  // Normal vector at the point where the ray hit the surface.
                 Vec3 ambientLight = Vec3(0, 0, 0);
                 Vec3 result = Vec3(0, 0, 0);
+                Vec3 vecP = Vec3{isect.p.getX(), isect.p.getY(), isect.p.getZ()};
 
                 for(auto & light : scene.lights) { 
                     if (light->getType() == light_type_e::ambient) {
@@ -36,6 +37,23 @@ class BlinnPhongIntegrator: public SamplerIntegrator {
                     Vec3 I = Vec3();
                     auto color = light->sample_Li(isect, &I);
                     auto vecL = Vec3(color.r(), color.g(), color.b());
+                    if (light->getTypeString() == "directional") {
+                        Vec3 vecDirecton = light->getFrom() - vecP;
+                        Ray shadow_ray{isect.p, vecDirecton};
+                        for(auto & object : scene.objects) {
+                            if (object->intersect_p(shadow_ray)) {
+                                return L;
+                            }
+                        }
+                    } else {
+                        Vec3 vecDirecton = light->getFrom() - vecP;
+                        Ray shadow_ray{isect.p, vecDirecton, 0.0, 1.0};
+                        // for(auto & object : scene.objects) {               
+                            if (scene.intersect_p(shadow_ray)) {
+                                return L;
+                            }
+                       // }
+                    }
                     // o h pode ser um l+v/||l+v|| esse valor de h é do material de selan
                     Vec3 vecH = normalize( vecL + normalize( -ray.getDirection() ) ); // nao ta seguindo a recomendação de selan mas sim o material que ele passou referente ao blinnphong
                     float maxValue = max(0.f, dot(vecN, vecH));

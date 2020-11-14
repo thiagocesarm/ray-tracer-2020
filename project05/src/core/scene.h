@@ -14,9 +14,10 @@ class Scene {
         Background * background;
         vector<Light *> lights;
         shared_ptr<Primitive> aggregate;
+        vector<Primitive *> objects;
 
-        Scene( Background * bkg, shared_ptr<Primitive> ag, vector<Light *> lights)
-             : background{ bkg }, aggregate{ ag }, lights{ lights } { /* empty */ }
+        Scene( Background * bkg, shared_ptr<Primitive> ag, vector<Light *> lights, vector<Primitive *> objects)
+             : background{ bkg }, aggregate{ ag }, lights{ lights }, objects {objects} { /* empty */ }
 
         bool intersect( const Ray& r, Surfel *isect ) const {
             return aggregate.get()->intersect(r, isect);

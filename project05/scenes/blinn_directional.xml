@@ -4,6 +4,7 @@
     <integrator type="blinn_phong" depth="2" />
 
     <film type="image" x_res="800" y_res="600" filename="directional.png" img_type="png" />
+    
 
     <world_begin/>
 
