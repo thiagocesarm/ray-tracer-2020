@@ -46,7 +46,8 @@ public:
     inline void make_unit_vector();
     inline Vec3 normalize();
     
-    
+    inline bool is_neutral() const { return e[0] == 0.0 && e[1] == 0.0 && e[2] == 0.0; }
+
     float e[3];
 };
 

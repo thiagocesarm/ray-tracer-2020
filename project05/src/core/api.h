@@ -136,7 +136,7 @@ void API::setIntegrator(ParamSet & ps) {
     if (type == IntegratorTypes::FLAT) {
         ro.integrator = new FlatIntegrator(ro.camera);
     } else if (type == IntegratorTypes::BLINN) {
-        auto depth = ps.find<int>(IntegratorParams::DEPTH, 1);
+        auto depth = ps.find<int>(IntegratorParams::DEPTH, 0);
         ro.integrator = new BlinnPhongIntegrator(ro.camera, depth);
     }
 }
