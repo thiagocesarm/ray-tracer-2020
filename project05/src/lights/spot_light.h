@@ -42,7 +42,7 @@ class SpotLight : public Light {
             } else if (theta < falloff){
                 *wi = I; //should be in the middle of the spotlight
             } else {
-                *wi = I * ( 1.0 - (theta - falloff) / (cutoff - falloff) ); // linear interpolation 100% to 0%
+                *wi = I * pow(( 1.0 - (theta - falloff) / (cutoff - falloff) ), 3); // linear interpolation 100% to 0%
             }
 
             return Color{ pointVec.r(), pointVec.g(), pointVec.b() };
