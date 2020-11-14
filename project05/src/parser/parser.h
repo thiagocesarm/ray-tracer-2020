@@ -110,15 +110,15 @@ void Parser::processTag(XMLElement * currentNode) {
         }
 
         if (currentNode->Attribute(LightSourceParams::CUTOFF.c_str()) != nullptr) {
-            unique_ptr<int[]> cutoff{ new int[1] };
-            cutoff[0] = currentNode->IntAttribute(LightSourceParams::CUTOFF.c_str());
-            currentParamSet->add<int>(LightSourceParams::CUTOFF, move(cutoff), 1);
+            unique_ptr<float[]> cutoff{ new float[1] };
+            cutoff[0] = currentNode->FloatAttribute(LightSourceParams::CUTOFF.c_str());
+            currentParamSet->add<float>(LightSourceParams::CUTOFF, move(cutoff), 1);
         }
 
         if (currentNode->Attribute(LightSourceParams::FALLOFF.c_str()) != nullptr) {
-            unique_ptr<int[]> falloff{ new int[1] };
-            falloff[0] = currentNode->IntAttribute(LightSourceParams::FALLOFF.c_str());
-            currentParamSet->add<int>(LightSourceParams::FALLOFF, move(falloff), 1);
+            unique_ptr<float[]> falloff{ new float[1] };
+            falloff[0] = currentNode->FloatAttribute(LightSourceParams::FALLOFF.c_str());
+            currentParamSet->add<float>(LightSourceParams::FALLOFF, move(falloff), 1);
         }
         API::setLight(*currentParamSet);
     } else if (tag == SceneTags::FILM) {

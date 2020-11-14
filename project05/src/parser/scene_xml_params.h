@@ -33,7 +33,7 @@ namespace LightSourceParams {
     const string TO = "to";
     const string I = "I";
     const string CUTOFF = "cutoff";
-    const string FALLOFF = "fallof";
+    const string FALLOFF = "falloff";
 
 };
 

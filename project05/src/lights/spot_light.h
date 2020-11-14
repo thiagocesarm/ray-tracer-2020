@@ -14,10 +14,10 @@ class SpotLight : public Light {
         Vec3 scale;
         Vec3 from;
         Vec3 to;
-        int cutoff;
-        int falloff;
+        float cutoff;
+        float falloff;
         
-        SpotLight(Vec3 mI, Vec3 mScale, Vec3 mFrom, Vec3 mTo, int mCutoff, int mFalloff) : Light(light_type_e::spot) {
+        SpotLight(Vec3 mI, Vec3 mScale, Vec3 mFrom, Vec3 mTo, float mCutoff, float mFalloff) : Light(light_type_e::spot) {
             I = mI;
             scale = mScale;
             from = mFrom;
@@ -34,17 +34,15 @@ class SpotLight : public Light {
             Vec3 directionalVec = to - from;
             directionalVec = normalize(-directionalVec);
 
-            float theta = dot(pointVec, directionalVec);
+            float theta = acos( dot(pointVec, directionalVec) ) * 180.0 / PI ;
+            if (theta < 0) { theta *= -1; }
 
-            float cutoffCoss = cos(cutoff);
-            float falloffCoss = cos(falloff);
-
-            if (theta < cutoffCoss) {
-                *wi = I * 0.0; //should be in the shadow outsite the spotlight
-            } else if (theta > falloffCoss){
+            if (theta > cutoff) {
+                *wi = I * 0.0; //should be in the shadow outside the spotlight
+            } else if (theta < falloff){
                 *wi = I; //should be in the middle of the spotlight
             } else {
-                *wi = I * 0.6;//((theta - falloffCoss)/(cutoffCoss - falloffCoss));
+                *wi = I * ( 1.0 - (theta - falloff) / (cutoff - falloff) ); // linear interpolation 100% to 0%
             }
 
             return Color{ pointVec.r(), pointVec.g(), pointVec.b() };

@@ -88,8 +88,8 @@ void API::setLight(ParamSet & ps) {
     auto scale = ps.findArray<int>(LightSourceParams::SCALE);
     auto to = ps.findArray<float>(LightSourceParams::TO);
     auto I = ps.findArray<float>(LightSourceParams::I);
-    auto cutoff = ps.find<int>(LightSourceParams::CUTOFF, 0);
-    auto falloff = ps.find<int>(LightSourceParams::FALLOFF, 0);
+    auto cutoff = ps.find<float>(LightSourceParams::CUTOFF, 0.0);
+    auto falloff = ps.find<float>(LightSourceParams::FALLOFF, 0.0);
 
     if (type == LightSourceTypesParams::AMBIENT && L != nullptr) {
         Vec3 vecL = Vec3(L[0], L[1], L[2]);
