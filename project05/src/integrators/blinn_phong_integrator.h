@@ -40,39 +40,54 @@ class BlinnPhongIntegrator: public SamplerIntegrator {
 
                 Vec3 ambientLight = Vec3(0, 0, 0);
                 Vec3 result = Vec3(0, 0, 0);
-                Vec3 vecP = Vec3{isect.p.getX(), isect.p.getY(), isect.p.getZ()};
 
                 for(auto & light : scene.lights) { 
                     if (light->getType() == light_type_e::ambient) {
                         light->sample_Li(isect, &ambientLight);
                         continue;
                     }
+                    
                     Vec3 I = Vec3();
+                    Vec3 vecP = Vec3{isect.p.getX(), isect.p.getY(), isect.p.getZ()};
                     auto color = light->sample_Li(isect, &I); // updates I according to current light
                     auto vecL = Vec3(color.r(), color.g(), color.b());
-                    if (light->getTypeString() == "directional") {
-                        Vec3 vecDirecton = light->getFrom() - vecP;
-                        Ray shadow_ray{isect.p, vecDirecton};
-                        for(auto & object : scene.objects) {
-                            if (!object->intersect_p(shadow_ray)) {
-                                Vec3 vecH = normalize( vecL + normalize( -ray.getDirection() ) ); // nao ta seguindo a recomendação de selan mas sim o material que ele passou referente ao blinnphong
-                                float maxValue = max(0.f, dot(vecN, vecH));
-                                result += kd * I * max( 0.f, dot( vecN, vecL )) + ks * I * pow(maxValue, glossiness); // light_I é variável de acordo com a luz da vez entao tem que ser algo tipo lights[i].i
-                
-                            }
-                        }
-                    } else {
-                        Vec3 vecDirecton = normalize(light->getFrom() - vecP);
-                        Ray shadow_ray{isect.p, vecDirecton, 0.0, 1.0};
-                        for(auto & object : scene.objects) {               
-                            if (!object->intersect_p(shadow_ray)) {
-                                Vec3 vecH = normalize( vecL + normalize( -ray.getDirection() ) ); // nao ta seguindo a recomendação de selan mas sim o material que ele passou referente ao blinnphong
-                                float maxValue = max(0.f, dot(vecN, vecH));
-                                result += (kd * I * max( 0.f, dot( vecN, vecL )) + ks * I * pow(maxValue, glossiness)) / (scene.objects.size()); // light_I é variável de acordo com a luz da vez entao tem que ser algo tipo lights[i].i                         
-                            } 
-                                
-                       }
+
+                    Vec3 shadow_ray_direction = light->getFrom() - vecP;
+                    Ray shadow_ray{isect.p, shadow_ray_direction, 0.0, 1.0};
+
+                    if (light->getType() == light_type_e::directional) {
+                        Vec3 vecH = normalize( vecL + normalize( -ray.getDirection() ) );
+                        float maxValue = max(0.f, dot(vecN, vecH));
+                        result += (kd * I * max( 0.f, dot( vecN, vecL )) + ks * I * pow(maxValue, glossiness));
+                    } else if (!scene.intersect_p(shadow_ray)) {
+                        Vec3 vecH = normalize( vecL + normalize( -ray.getDirection() ) );
+                        float maxValue = max(0.f, dot(vecN, vecH));
+                        result += (kd * I * max( 0.f, dot( vecN, vecL )) + ks * I * pow(maxValue, glossiness));
                     }
+
+                    // if (light->getTypeString() == "directional") {
+                    //     Vec3 vecDirecton = light->getFrom() - vecP;
+                    //     Ray shadow_ray{isect.p, vecDirecton};
+                    //     for(auto & object : scene.objects) {
+                    //         if (!object->intersect_p(shadow_ray)) {
+                    //             Vec3 vecH = normalize( vecL + normalize( -ray.getDirection() ) ); // nao ta seguindo a recomendação de selan mas sim o material que ele passou referente ao blinnphong
+                    //             float maxValue = max(0.f, dot(vecN, vecH));
+                    //             result += kd * I * max( 0.f, dot( vecN, vecL )) + ks * I * pow(maxValue, glossiness); // light_I é variável de acordo com a luz da vez entao tem que ser algo tipo lights[i].i
+                
+                    //         }
+                    //     }
+                    // } else {
+                    //     Vec3 vecDirecton = normalize(light->getFrom() - vecP);
+                    //     Ray shadow_ray{isect.p, vecDirecton, 0.0, 1.0};
+                    //     for(auto & object : scene.objects) {               
+                    //         if (!object->intersect_p(shadow_ray)) {
+                    //             Vec3 vecH = normalize( vecL + normalize( -ray.getDirection() ) ); // nao ta seguindo a recomendação de selan mas sim o material que ele passou referente ao blinnphong
+                    //             float maxValue = max(0.f, dot(vecN, vecH));
+                    //             result += (kd * I * max( 0.f, dot( vecN, vecL )) + ks * I * pow(maxValue, glossiness)) / (scene.objects.size()); // light_I é variável de acordo com a luz da vez entao tem que ser algo tipo lights[i].i                         
+                    //         } 
+                                
+                    //    }
+                    // }
                 }
                 // Ambient contribution
                 result = ka * ambientLight + result;
