@@ -39,6 +39,14 @@ class PrimList: public AggregatePrimitive {
             }
             return false;
         };
+
+        Bounds3 bounds() const override {
+            Bounds3 bounds = Bounds3();
+            for(auto prim : primitives) {
+                bounds.Union(prim->bounds());
+            }
+            return bounds;
+        };
 };
 
 #endif

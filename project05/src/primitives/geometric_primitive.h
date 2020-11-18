@@ -29,6 +29,10 @@ class GeometricPrimitive: public Primitive {
         Material * getMaterial() const override {
             return material;
         }
+
+        Bounds3 bounds() const override {
+            return shape->bounds();
+        }
 };
 
 #endif
