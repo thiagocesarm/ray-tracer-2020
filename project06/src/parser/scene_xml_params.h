@@ -105,6 +105,19 @@ namespace FilmParams {
     const string GAMMA_CORRECTED = "gamma_corrected";
 };
 
+namespace TriangleParams {
+    const string TYPE = "type";
+    const string MATERIAL = "material";
+    const string NTRIANGLES = "ntriangles";
+    const string INDICES = "indices";
+    const string VERTICES = "vertices";
+    const string NORMALS = "normals";
+    const string UVs = "uvs";
+    const string REVERSE_VERTEX_ORDER = "reverse_vertex_order";
+    const string COMPUTE_NORMALS = "compute_normals";
+    const string BACKFACE_CULL = "backface_cull";
+};
+
 namespace BackgroundParams {
     const string TYPE = "type";
     const string COLOR = "color";
