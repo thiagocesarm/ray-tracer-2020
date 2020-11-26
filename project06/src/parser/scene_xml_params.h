@@ -71,6 +71,7 @@ namespace ObjectParams {
 
 namespace ObjectTypes {
     const string SPHERE = "sphere";
+    const string TRIANGLEMESH = "triangleMesh";
 }
 
 namespace SphereParams {

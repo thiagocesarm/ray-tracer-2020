@@ -50,7 +50,6 @@ std::ostream& operator<<( std::ostream& os, const Triangle & t )
     return os;
 }
 
-
 // This is the function called by the API to create a triangle mesh shape.
 /* 
  * This is the entry-point function for the client code.
@@ -63,6 +62,7 @@ std::ostream& operator<<( std::ostream& os, const Triangle & t )
  *
  * @return The list of Shape (triangles) that we read from the scene file.
  */
+
 vector< shared_ptr<Shape> >
 create_triangle_mesh_shape( bool flip_normals, ParamSet &ps )
 {
@@ -107,6 +107,68 @@ create_triangle_mesh_shape( bool flip_normals, ParamSet &ps )
         // 
         // You should read all the data into the `tri_mesh_data` object so that the function call below works,
         // regardless if the data came from the OBJ file or was read directly from the scene file.
+
+        auto triangles =  ps.find<int>(TriangleParams::NTRIANGLES, 0);
+        auto indices = ps.findArray<int>(TriangleParams::INDICES);
+        auto vertices = ps.findArray<float>(TriangleParams::VERTICES);
+        auto normals = ps.findArray<int>(TriangleParams::NORMALS);
+        auto uv = ps.findArray<int>(TriangleParams::UVs);
+
+        std::vector<Vec3> vecIndices;
+        int i = 0;
+        while (indices[i] != NULL) {
+            if (i % 3 == 0) {
+                vecIndices.push_back(Vec3{indices[i], indices[i+1], indices[i+2]});
+            }
+            i++;
+        }
+
+        std::vector<Vec3> vecVertices;
+        int i = 0;
+        while (vertices[i] != NULL) {
+            if (i % 3 == 0) {
+                vecVertices.push_back(Vec3{vertices[i], vertices[i+1], vertices[i+2]});
+            }
+            i++;
+        }
+
+        std::vector<Vec3> vecNormals;
+        int i = 0;
+        while (normals[i] != NULL) {
+            if (i % 3 == 0) {
+                vecNormals.push_back(Vec3{normals[i], normals[i+1], normals[i+2]});
+            }
+            i++;
+        }
+
+        std::vector<Vec3> vecUv;
+        int i = 0;
+        while (uv[i] != NULL) {
+            if (i % 3 == 0) {
+                vecUv.push_back(Vec3{uv[i], uv[i+1], uv[i+2]});
+            }
+            i++;
+        }
+
+        mesh->n_triangles = triangles;
+        mesh->vertices = vecVertices;
+        mesh->normals = vecNormals;
+        mesh->uvcoords = vecUv;
+
+        for(int i =0; i < vecIndices.size(); i++){
+            mesh->vertex_indices.push_back(vecIndices[i].r());
+            mesh->vertex_indices.push_back(vecIndices[i].g());
+            mesh->vertex_indices.push_back(vecIndices[i].b());
+
+            mesh->normal_indices.push_back(vecIndices[i].r());
+            mesh->normal_indices.push_back(vecIndices[i].g());
+            mesh->normal_indices.push_back(vecIndices[i].b());
+
+            mesh->uvcoord_indices.push_back(vecIndices[i].r());
+            mesh->uvcoord_indices.push_back(vecIndices[i].g());
+            mesh->uvcoord_indices.push_back(vecIndices[i].b());
+        }
+
     }
 
     // At this point, the tri_mesh_data object has already been filled in with data coming either from a OBJ file or from the scene file.

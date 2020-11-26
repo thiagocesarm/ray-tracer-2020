@@ -62,7 +62,7 @@ class Triangle : public Shape {
 		/// Return the triangle's bounding box.
 		// Bounds3f object_bound() const;
         /// The regular intersection methods, as defined in the Shape parent class.
-		bool intersect(const Ray &ray, float *thit, Surfel *isect ) const { 
+		bool intersect(Ray &ray, float *thit, Surfel *isect ) const { 
             const float EPSILON = 0.0000001;
             Vec3 vertex0 = mesh->vertices[v[0]];
             Vec3 vertex1 = mesh->vertices[v[1]];  
@@ -90,6 +90,8 @@ class Triangle : public Shape {
             if (t > EPSILON) // ray intersection
             {
                 Vec3 vecP = rayOrigin + ray.getDirection() * t;
+                *thit = t;
+                isect->n = cross(edge1, edge2);
                 Point3D p = Point3D {vecP.r(), vecP.g(), vecP.b()};
                 isect->p = p;
                 return true;
@@ -97,7 +99,10 @@ class Triangle : public Shape {
             else // This means that there is a line intersection but not a ray intersection.
                 return false; 
         }
-		bool intersect_p( const Ray &ray ) const { return true; }
+
+		bool intersect_p(Ray &ray ) const { return true; }
+
+        Bounds3 bounds() const override { return Bounds3(Point3D{0,0,0}, Point3D{0,0,0}); }
 
         /// This friend function helps us debug the triangles, if we want to.
         friend std::ostream& operator<<( std::ostream& os, const Triangle & t );

@@ -22,6 +22,7 @@
 #include "../primitives/aggregate.h"
 #include "../primitives/geometric_primitive.h"
 #include "../shapes/sphere.h"
+#include "../shapes/triangle.h"
 #include "../lights/ambient_light.h"
 #include "../lights/directional_light.h"
 #include "../lights/point_light.h"
@@ -194,6 +195,21 @@ void API::setObject(ParamSet & ps) {
         auto center = ps.findArray<float>(SphereParams::CENTER);
 
         Shape * shape = new Sphere( radius, Point3D( center[0], center[1], center[2] ) );
+        ro.objects.push_back( new GeometricPrimitive(shape, ro.material) );
+
+    } else if (type == ObjectTypes::TRIANGLEMESH) {
+        auto radius = ps.find<float>(SphereParams::RADIUS, 0.4);
+        auto center = ps.findArray<float>(SphereParams::CENTER);
+
+        auto bfc =  ps.find<bool>(TriangleParams::BACKFACE_CULL, false);
+        auto indices = ps.findArray<int>(TriangleParams::INDICES);
+        auto vertices = ps.findArray<float>(TriangleParams::VERTICES);
+        auto normals = ps.findArray<int>(TriangleParams::NORMALS);
+        auto uv = ps.findArray<int>(TriangleParams::UVs);
+
+        auto mesh = create_triangle_mesh_shape(false, ps);
+
+        Shape * shape = new Triangle( mesh, 0, bfc);
         ro.objects.push_back( new GeometricPrimitive(shape, ro.material) );
     }
 }
