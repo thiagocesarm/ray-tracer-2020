@@ -7,7 +7,10 @@
 
     <world_begin/>
 
+        <background type="colors" bl="153 204 255" tl="18 10 143" tr="18 10 143" br="153 204 255" />
+
         <material type="blinn" name="redish" ambient="0.6 0.6 0.6" diffuse ="0.9 0.2 0.1"  specular ="0.8 0.8 0.8" mirror ="0.0 0.0 0.0" glossiness ="64"/>
+
         <object type="trianglemesh" material="grey" ntriangles="2" indices="0 1 2   0 2 3"
         vertices="-3 -0.5 -3   3 -0.5 -3   3 -0.5 3  -3 -0.5 3"
         normals="0 1 0   0 1 0   0 1 0   0 1 0"

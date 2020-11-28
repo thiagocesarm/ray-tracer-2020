@@ -268,23 +268,65 @@ void Parser::processTag(XMLElement * currentNode) {
             fillArrayWithValuesFromString<float>(centerString, centerArray, 3);
             currentParamSet->add<float>(SphereParams::CENTER, move(centerArray), 3);
         } else if (objectType == ObjectTypes::TRIANGLEMESH) {
+            // Number of triangles
             unique_ptr<int[]> nTriangles{ new int[1] };
             nTriangles[0] = currentNode->IntAttribute(TriangleParams::NTRIANGLES.c_str());
             auto num_triangles = nTriangles[0];
             currentParamSet->add<int>(TriangleParams::NTRIANGLES, move(nTriangles), 1);
 
+            // Triangle indices
             string indicesString = currentNode->Attribute(TriangleParams::INDICES.c_str());
             unique_ptr<int[]> indicesArray( new int[3 * num_triangles] );
             fillArrayWithValuesFromString<int>(indicesString, indicesArray, 3 * num_triangles);
-            // Calculate number of vertices
-            int num_vertices = 0;
+            // Calculate maximum index and number of vertices
+            int max_index = 0;
             for (size_t i = 0; i < 3 * num_triangles; i++) {
-                if (indicesArray.get()[i] > num_vertices) { 
-                    num_vertices = indicesArray.get()[i]; 
+                if (indicesArray.get()[i] > max_index) { 
+                    max_index = indicesArray.get()[i]; 
                 }
             }
-            num_vertices++;
+
+            int num_vertices = max_index + 1;
+            unique_ptr<int[]> num_vertices_array{ new int[1] };
+            num_vertices_array[0] = num_vertices;
+            currentParamSet->add<int>(TriangleParams::NUM_VERTICES, move(num_vertices_array), 1);
             currentParamSet->add<int>(TriangleParams::INDICES, move(indicesArray), 3 * num_triangles);
+
+            // Triangle vertices
+            string verticesString = currentNode->Attribute(TriangleParams::VERTICES.c_str());
+            unique_ptr<float[]> verticesArray( new float[3 * num_vertices] );
+            fillArrayWithValuesFromString<float>(verticesString, verticesArray, 3 * num_vertices);
+            currentParamSet->add<float>(TriangleParams::VERTICES, move(verticesArray), 3 * num_vertices);
+
+            // Triangle normals
+            string normalsString = currentNode->Attribute(TriangleParams::NORMALS.c_str());
+            unique_ptr<float[]> normalsArray( new float[3 * num_vertices] );
+            fillArrayWithValuesFromString<float>(normalsString, normalsArray, 3 * num_vertices);
+            currentParamSet->add<float>(TriangleParams::NORMALS, move(normalsArray), 3 * num_vertices);
+
+            // Triangle UVs
+            string uvsString = currentNode->Attribute(TriangleParams::UV.c_str());
+            unique_ptr<float[]> uvsArray( new float[2 * num_vertices] );
+            fillArrayWithValuesFromString<float>(uvsString, uvsArray, 2 * num_vertices);
+            currentParamSet->add<float>(TriangleParams::UV, move(uvsArray), 2 * num_vertices);
+
+            // Triangle reverse vertex order
+            unique_ptr<bool[]> reverseVertexOrderArray( new bool[1] );
+            bool is_reverse_vertex_order = currentNode->BoolAttribute(TriangleParams::REVERSE_VERTEX_ORDER.c_str());
+            reverseVertexOrderArray[0] = is_reverse_vertex_order;
+            currentParamSet->add<bool>(TriangleParams::REVERSE_VERTEX_ORDER, move(reverseVertexOrderArray), 1);
+
+            // Triangle compute normals
+            unique_ptr<bool[]> computeNormalsArray( new bool[1] );
+            bool is_compute_normals = currentNode->BoolAttribute(TriangleParams::COMPUTE_NORMALS.c_str());
+            computeNormalsArray[0] = is_compute_normals;
+            currentParamSet->add<bool>(TriangleParams::COMPUTE_NORMALS, move(computeNormalsArray), 1);
+
+            // Triangle backface cull
+            unique_ptr<bool[]> backfaceCullArray( new bool[1] );
+            bool is_backface_cull = currentNode->BoolAttribute(TriangleParams::BACKFACE_CULL.c_str());
+            backfaceCullArray[0] = is_backface_cull;
+            currentParamSet->add<bool>(TriangleParams::BACKFACE_CULL, move(backfaceCullArray), 1);
         }
         
         API::setObject(*currentParamSet);

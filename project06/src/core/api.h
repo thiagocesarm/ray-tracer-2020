@@ -198,17 +198,55 @@ void API::setObject(ParamSet & ps) {
         ro.objects.push_back( new GeometricPrimitive(shape, ro.material) );
 
     } else if (type == ObjectTypes::TRIANGLEMESH) {
-        // auto bfc =  ps.find<bool>(TriangleParams::BACKFACE_CULL, false);
-        // auto indices = ps.findArray<int>(TriangleParams::INDICES);
-        // auto vertices = ps.findArray<float>(TriangleParams::VERTICES);
-        // auto normals = ps.findArray<int>(TriangleParams::NORMALS);
-        // auto uv = ps.findArray<int>(TriangleParams::UV);
+        auto num_triangles = ps.find<int>(TriangleParams::NTRIANGLES, 0);
+        auto num_v = ps.find<int>(TriangleParams::NUM_VERTICES, 0);
+        auto indices = ps.findArray<int>(TriangleParams::INDICES);
+        auto vertices = ps.findArray<float>(TriangleParams::VERTICES);
+        auto normals = ps.findArray<float>(TriangleParams::NORMALS);
+        auto uv = ps.findArray<float>(TriangleParams::UV);
+        auto rvo =  ps.find<bool>(TriangleParams::REVERSE_VERTEX_ORDER, false);
+        auto cn =  ps.find<bool>(TriangleParams::COMPUTE_NORMALS, false);
+        auto bfc =  ps.find<bool>(TriangleParams::BACKFACE_CULL, false);
 
-        auto mesh = create_triangle_mesh_shape(false, ps);
+        cout << "num_triangles " << num_triangles << "\n";
 
-        for (auto triangle : mesh) {
-            ro.objects.push_back( new GeometricPrimitive(triangle.get(), ro.material) );
+        cout << "indices ";
+        for (size_t i = 0; i < num_triangles * 3; i++)
+        {
+            cout << indices[i] << " ";
         }
+        cout << "\n";
+
+        cout << "vertices ";
+        for (size_t i = 0; i < num_v * 3; i++)
+        {
+            cout << vertices[i] << " ";
+        }
+        cout << "\n";
+        
+        cout << "normals ";
+        for (size_t i = 0; i < num_v * 3; i++)
+        {
+            cout << normals[i] << " ";
+        }
+        cout << "\n";
+
+        cout << "uv ";
+        for (size_t i = 0; i < num_v * 2; i++)
+        {
+            cout << uv[i] << " ";
+        }
+        cout << "\n";
+
+        cout << "reverse vertex order " << rvo << "\n";
+        cout << "compute normals " << cn << "\n";
+        cout << "backface cull " << bfc << "\n";
+
+        // auto mesh = create_triangle_mesh_shape(false, ps);
+
+        // for (auto triangle : mesh) {
+        //     ro.objects.push_back( new GeometricPrimitive(triangle.get(), ro.material) );
+        // }
     }
 }
 

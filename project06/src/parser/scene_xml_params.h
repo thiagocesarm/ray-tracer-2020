@@ -117,6 +117,8 @@ namespace TriangleParams {
     const string REVERSE_VERTEX_ORDER = "reverse_vertex_order";
     const string COMPUTE_NORMALS = "compute_normals";
     const string BACKFACE_CULL = "backface_cull";
+    // helper property
+    const string NUM_VERTICES = "NUM_VERTICES";
 };
 
 namespace BackgroundParams {
