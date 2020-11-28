@@ -71,7 +71,7 @@ namespace ObjectParams {
 
 namespace ObjectTypes {
     const string SPHERE = "sphere";
-    const string TRIANGLEMESH = "triangleMesh";
+    const string TRIANGLEMESH = "trianglemesh";
 }
 
 namespace SphereParams {
@@ -113,7 +113,7 @@ namespace TriangleParams {
     const string INDICES = "indices";
     const string VERTICES = "vertices";
     const string NORMALS = "normals";
-    const string UVs = "uvs";
+    const string UV = "uv";
     const string REVERSE_VERTEX_ORDER = "reverse_vertex_order";
     const string COMPUTE_NORMALS = "compute_normals";
     const string BACKFACE_CULL = "backface_cull";

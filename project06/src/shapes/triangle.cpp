@@ -108,11 +108,11 @@ create_triangle_mesh_shape( bool flip_normals, ParamSet &ps )
         // You should read all the data into the `tri_mesh_data` object so that the function call below works,
         // regardless if the data came from the OBJ file or was read directly from the scene file.
 
-        auto triangles =  ps.find<int>(TriangleParams::NTRIANGLES, 0);
+        auto triangles = ps.find<int>(TriangleParams::NTRIANGLES, 0);
         auto indices = ps.findArray<int>(TriangleParams::INDICES);
         auto vertices = ps.findArray<float>(TriangleParams::VERTICES);
         auto normals = ps.findArray<int>(TriangleParams::NORMALS);
-        auto uv = ps.findArray<int>(TriangleParams::UVs);
+        auto uv = ps.findArray<int>(TriangleParams::UV);
 
         std::vector<Vec3> vecIndices;
         int i = 0;

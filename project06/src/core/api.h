@@ -198,19 +198,17 @@ void API::setObject(ParamSet & ps) {
         ro.objects.push_back( new GeometricPrimitive(shape, ro.material) );
 
     } else if (type == ObjectTypes::TRIANGLEMESH) {
-        auto radius = ps.find<float>(SphereParams::RADIUS, 0.4);
-        auto center = ps.findArray<float>(SphereParams::CENTER);
-
-        auto bfc =  ps.find<bool>(TriangleParams::BACKFACE_CULL, false);
-        auto indices = ps.findArray<int>(TriangleParams::INDICES);
-        auto vertices = ps.findArray<float>(TriangleParams::VERTICES);
-        auto normals = ps.findArray<int>(TriangleParams::NORMALS);
-        auto uv = ps.findArray<int>(TriangleParams::UVs);
+        // auto bfc =  ps.find<bool>(TriangleParams::BACKFACE_CULL, false);
+        // auto indices = ps.findArray<int>(TriangleParams::INDICES);
+        // auto vertices = ps.findArray<float>(TriangleParams::VERTICES);
+        // auto normals = ps.findArray<int>(TriangleParams::NORMALS);
+        // auto uv = ps.findArray<int>(TriangleParams::UV);
 
         auto mesh = create_triangle_mesh_shape(false, ps);
 
-        Shape * shape = new Triangle( mesh, 0, bfc);
-        ro.objects.push_back( new GeometricPrimitive(shape, ro.material) );
+        for (auto triangle : mesh) {
+            ro.objects.push_back( new GeometricPrimitive(triangle.get(), ro.material) );
+        }
     }
 }
 

@@ -4,11 +4,11 @@
 #include <iostream>
 #include <cmath>
 #include <vector>
-#include "../core/point3D.h"
 #include "../core/primitive.h"
 #include "../core/shape.h"
 #include "../parser/scene_xml_params.h"
 #include "../ext/tiny_obj_loader.h"
+#include "../core/point3D.h"
 
 using namespace std;
 
@@ -51,7 +51,7 @@ class Triangle : public Shape {
 	
 	public:
         // The single constructor, that receives the mesh, this triangle id, and an indication for backface culling.
-		Triangle( shared_ptr<TriangleMesh> mesh, int tri_id, bool bfc=true )
+		Triangle( shared_ptr<TriangleMesh> mesh, int tri_id, bool bfc = true )
 			: Shape(), mesh{mesh}, backface_cull{bfc}
 		{
 			// This is just a shortcut to access this triangle's data stored in the mesh database.
@@ -62,7 +62,7 @@ class Triangle : public Shape {
 		/// Return the triangle's bounding box.
 		// Bounds3f object_bound() const;
         /// The regular intersection methods, as defined in the Shape parent class.
-		bool intersect(Ray &ray, float *thit, Surfel *isect ) const { 
+		bool intersect(const Ray& ray, float * thit, Surfel * isect ) const override { 
             const float EPSILON = 0.0000001;
             Vec3 vertex0 = mesh->vertices[v[0]];
             Vec3 vertex1 = mesh->vertices[v[1]];  
@@ -100,7 +100,33 @@ class Triangle : public Shape {
                 return false; 
         }
 
-		bool intersect_p(Ray &ray ) const { return true; }
+		bool intersect_p( const Ray& ray ) const override { 
+            const float EPSILON = 0.0000001;
+            Vec3 vertex0 = mesh->vertices[v[0]];
+            Vec3 vertex1 = mesh->vertices[v[1]];  
+            Vec3 vertex2 = mesh->vertices[v[2]];
+            Vec3 edge1, edge2, h, s, q;
+            float a,f,u,v;
+            edge1 = vertex1 - vertex0;
+            edge2 = vertex2 - vertex0;
+            h = cross(ray.getDirection(), edge2);
+            a = dot(edge1, h);
+            if (a > -EPSILON && a < EPSILON)
+                return false;    // This ray is parallel to this triangle.
+            f = 1.0/a;
+            Vec3 rayOrigin = Vec3 {ray.getOrigin().getX(), ray.getOrigin().getY(), ray.getOrigin().getZ()};
+            s = rayOrigin - vertex0;
+            u = f * dot(s,h);
+            if (u < 0.0 || u > 1.0)
+                return false;
+            q = cross(s, edge1);
+            v = f * dot(ray.getDirection(), q);
+            if (v < 0.0 || u + v > 1.0)
+                return false;
+            // At this stage we can compute t to find out where the intersection point is on the line.
+            float t = f * dot(edge2, q);
+            return t > EPSILON;
+        }
 
         Bounds3 bounds() const override { return Bounds3(Point3D{0,0,0}, Point3D{0,0,0}); }
 
@@ -110,7 +136,7 @@ class Triangle : public Shape {
 
 /// This is the entry point for the client. This function begins the process of reading a triangle mesh.
 vector<shared_ptr<Shape>>
-create_triangle_mesh_shape( bool flip_normals, const ParamSet &ps );
+create_triangle_mesh_shape( bool flip_normals, ParamSet &ps );
 
 /// This is the function that actually creates the mesh database and the triangles, ans store them in a Shape list.
 vector<shared_ptr<Shape>> create_triangle_mesh( shared_ptr<TriangleMesh> , bool );

@@ -267,6 +267,24 @@ void Parser::processTag(XMLElement * currentNode) {
             unique_ptr<float[]> centerArray( new float[3] );
             fillArrayWithValuesFromString<float>(centerString, centerArray, 3);
             currentParamSet->add<float>(SphereParams::CENTER, move(centerArray), 3);
+        } else if (objectType == ObjectTypes::TRIANGLEMESH) {
+            unique_ptr<int[]> nTriangles{ new int[1] };
+            nTriangles[0] = currentNode->IntAttribute(TriangleParams::NTRIANGLES.c_str());
+            auto num_triangles = nTriangles[0];
+            currentParamSet->add<int>(TriangleParams::NTRIANGLES, move(nTriangles), 1);
+
+            string indicesString = currentNode->Attribute(TriangleParams::INDICES.c_str());
+            unique_ptr<int[]> indicesArray( new int[3 * num_triangles] );
+            fillArrayWithValuesFromString<int>(indicesString, indicesArray, 3 * num_triangles);
+            // Calculate number of vertices
+            int num_vertices = 0;
+            for (size_t i = 0; i < 3 * num_triangles; i++) {
+                if (indicesArray.get()[i] > num_vertices) { 
+                    num_vertices = indicesArray.get()[i]; 
+                }
+            }
+            num_vertices++;
+            currentParamSet->add<int>(TriangleParams::INDICES, move(indicesArray), 3 * num_triangles);
         }
         
         API::setObject(*currentParamSet);
