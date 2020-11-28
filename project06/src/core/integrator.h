@@ -57,7 +57,7 @@ class SamplerIntegrator : public Integrator {
 
 					Ray ray = camera->generate_ray( i, j );
 					Surfel isect;
-
+					
 					auto bkg_color = scene.background->sample( float(i)/float(w), float(j)/float(h) );
 					auto pixel_color = Li(ray, scene, bkg_color);
 

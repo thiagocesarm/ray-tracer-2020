@@ -63,10 +63,10 @@ class Triangle : public Shape {
 		/// Return the triangle's bounding box.
 		// Bounds3f object_bound() const;
         /// The regular intersection methods, as defined in the Shape parent class.
-		bool intersect(const Ray& ray, float * thit, Surfel * isect ) const override { 
+		bool intersect(const Ray& ray, float * thit, Surfel * isect ) const override {
             const float EPSILON = 0.0000001;
             Vec3 vertex0 = mesh->vertices[v[0]];
-            Vec3 vertex1 = mesh->vertices[v[1]];  
+            Vec3 vertex1 = mesh->vertices[v[1]];
             Vec3 vertex2 = mesh->vertices[v[2]];
             Vec3 edge1, edge2, h, s, q;
             float a,f,u,v;
@@ -380,7 +380,7 @@ create_triangle_mesh_shape( bool flip_normals, ParamSet &ps )
 	shared_ptr<TriangleMesh> mesh = std::make_shared<TriangleMesh>(); // Default Ctro.
 
     // Retrieve filename.
-    string filename = ps.find<string>(FilmParams::FILENAME, "output_img.ppm"); // Retrieving data associated with 'filename' attrib.
+    string filename = ps.find<string>(TriangleParams::FILENAME, ""); // Retrieving data associated with 'filename' attrib.
     // Retrieve backface ON/OFF
     string bkf_on_str = ps.find<string>(TriangleParams::BACKFACE_CULL, "");
     if ( bkf_on_str == "off" or bkf_on_str == "false" )
@@ -420,23 +420,17 @@ create_triangle_mesh_shape( bool flip_normals, ParamSet &ps )
         auto uv = ps.findArray<float>(TriangleParams::UV);
 
         std::vector<Vec3> vecIndices;
-        for (size_t i = 0; i < num_triangles; i += 3) {
-            vecIndices.push_back(Vec3{float(indices[i]), float(indices[i+1]), float(indices[i+2])});
+        for (size_t i = 0; i < num_triangles; i++) {
+            vecIndices.push_back(Vec3{float(indices[i*3]), float(indices[i*3 + 1]), float(indices[i*3 + 2])});
         }
 
         std::vector<Vec3> vecVertices;
-        for (size_t i = 0; i < num_vertices; i += 3) {
-            vecVertices.push_back(Vec3{vertices[i], vertices[i+1], vertices[i+2]});
-        }
-
         std::vector<Vec3> vecNormals;
-        for (size_t i = 0; i < num_vertices; i += 3) {
-            vecNormals.push_back(Vec3{normals[i], normals[i+1], normals[i+2]});
-        }
-
         std::vector<Vec3> vecUv;
-        for (size_t i = 0; i < num_vertices; i += 3) {
-            vecUv.push_back(Vec3{uv[i], uv[i+1], uv[i+2]});
+        for (size_t i = 0; i < num_vertices; i++) {
+            vecVertices.push_back(Vec3{vertices[i*3], vertices[i*3 + 1], vertices[i*3 + 2]});
+            vecNormals.push_back(Vec3{normals[i*3], normals[i*3 + 1], normals[i*3 + 2]});
+            vecUv.push_back(Vec3{uv[i*2], uv[i*2 + 1], 0}); // UV only has 2 values
         }
 
         mesh->n_triangles = num_triangles;

@@ -107,6 +107,7 @@ namespace FilmParams {
 };
 
 namespace TriangleParams {
+    const string FILENAME = "filename";
     const string TYPE = "type";
     const string MATERIAL = "material";
     const string NTRIANGLES = "ntriangles";
