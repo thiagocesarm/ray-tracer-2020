@@ -15,9 +15,9 @@ class Integrator {
 
 class SamplerIntegrator : public Integrator {
 	protected:
-        Camera * camera;
+        shared_ptr<Camera> camera;
 	public:
-		SamplerIntegrator( Camera * cam ) : camera{ cam } {};
+		SamplerIntegrator( shared_ptr<Camera> cam ) : camera{ cam } {};
 
 		virtual Color Li( const Ray& ray, const Scene& scene, const Color bkg_color ) const = 0;
 		

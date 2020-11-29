@@ -7,10 +7,10 @@
 
 class GeometricPrimitive: public Primitive {
     public:
-        Shape * shape;
-        Material * material;
+        shared_ptr<Shape> shape;
+        shared_ptr<Material> material;
 
-        GeometricPrimitive(Shape * s, Material * m) : shape{s}, material{m} {};
+        GeometricPrimitive(shared_ptr<Shape> s, shared_ptr<Material> m) : shape{s}, material{m} {};
 
         bool intersect( const Ray& r, Surfel *sf ) const override {
             float t_hit = 0;
@@ -27,7 +27,7 @@ class GeometricPrimitive: public Primitive {
         };
 
         Material * getMaterial() const override {
-            return material;
+            return material.get();
         }
 
         Bounds3 bounds() const override {

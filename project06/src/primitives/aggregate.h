@@ -18,10 +18,10 @@ class AggregatePrimitive: public Primitive {
 
 class PrimList: public AggregatePrimitive {
     private:
-        vector<Primitive *> primitives;
+        vector<shared_ptr<Primitive>> primitives;
     
     public:
-        PrimList(vector<Primitive *> prims) : primitives{ prims } {};
+        PrimList(vector<shared_ptr<Primitive>> prims) : primitives{ prims } {};
 
         bool intersect( const Ray& r, Surfel *sf ) const override {
             bool did_intersect = false;

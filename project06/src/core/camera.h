@@ -11,7 +11,7 @@ using namespace std;
 class Camera {    
     public:
         string type;
-        Film *film;
+        shared_ptr<Film> film;
         Point3D eye{0,0,0};  //!< Camera view point (origin).
         Vec3 u{1,0,0};   //!< Camera's X local coordinate system.
         Vec3 v{0,1,0};   //!< Camera's Y local coordinate system.
@@ -24,7 +24,7 @@ class Camera {
         Vec3 vp_vert_axis{0,1,0}; //!< The vp's vertical axis: defines the height of the vp.
 
         Camera() { /* empty */ };
-        Camera( Film *f ) : film{ f } { /* empty */ }
+        Camera( shared_ptr<Film> f ) : film{ f } { /* empty */ }
         Camera( string t ) : type{ t } { /* empty */ }
         virtual Ray generate_ray( int i, int j ) = 0;
         virtual void finishSetup() = 0;

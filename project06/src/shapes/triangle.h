@@ -419,9 +419,18 @@ create_triangle_mesh_shape( bool flip_normals, ParamSet &ps )
         auto normals = ps.findArray<float>(TriangleParams::NORMALS);
         auto uv = ps.findArray<float>(TriangleParams::UV);
 
-        std::vector<Vec3> vecIndices;
         for (size_t i = 0; i < num_triangles; i++) {
-            vecIndices.push_back(Vec3{float(indices[i*3]), float(indices[i*3 + 1]), float(indices[i*3 + 2])});
+            mesh->vertex_indices.push_back(indices[i*3]);
+            mesh->vertex_indices.push_back(indices[i*3 + 1]);
+            mesh->vertex_indices.push_back(indices[i*3 + 2]);
+
+            mesh->normal_indices.push_back(indices[i*3]);
+            mesh->normal_indices.push_back(indices[i*3 + 1]);
+            mesh->normal_indices.push_back(indices[i*3 + 2]);
+
+            mesh->uvcoord_indices.push_back(indices[i*3]);
+            mesh->uvcoord_indices.push_back(indices[i*3 + 1]);
+            mesh->uvcoord_indices.push_back(indices[i*3 + 2]);
         }
 
         std::vector<Vec3> vecVertices;
@@ -437,21 +446,6 @@ create_triangle_mesh_shape( bool flip_normals, ParamSet &ps )
         mesh->vertices = vecVertices;
         mesh->normals = vecNormals;
         mesh->uvcoords = vecUv;
-
-        for(int i = 0; i < vecIndices.size(); i++){
-            mesh->vertex_indices.push_back(vecIndices[i].r());
-            mesh->vertex_indices.push_back(vecIndices[i].g());
-            mesh->vertex_indices.push_back(vecIndices[i].b());
-
-            mesh->normal_indices.push_back(vecIndices[i].r());
-            mesh->normal_indices.push_back(vecIndices[i].g());
-            mesh->normal_indices.push_back(vecIndices[i].b());
-
-            mesh->uvcoord_indices.push_back(vecIndices[i].r());
-            mesh->uvcoord_indices.push_back(vecIndices[i].g());
-            mesh->uvcoord_indices.push_back(vecIndices[i].b());
-        }
-
     }
 
     // At this point, the tri_mesh_data object has already been filled in with data coming either from a OBJ file or from the scene file.
