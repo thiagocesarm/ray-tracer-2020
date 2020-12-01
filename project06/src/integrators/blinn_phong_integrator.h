@@ -12,7 +12,7 @@ class BlinnPhongIntegrator: public SamplerIntegrator {
         int max_depth;
         float reflected_ray_offset = 0.01;
     public:
-        BlinnPhongIntegrator(Camera * cam, int mDepth) : SamplerIntegrator(cam), max_depth{ mDepth } { }
+        BlinnPhongIntegrator(shared_ptr<Camera> cam, int mDepth) : SamplerIntegrator(cam), max_depth{ mDepth } { }
 
         Color Li(const Ray& ray, const Scene & scene, const Color bkg_color ) const override {
             Color L(0,0,0);

@@ -20,7 +20,7 @@ class Sphere: public Shape {
             this->center = mCenter;
         };
         
-        bool intersect( Ray r, float * t_hit, Surfel *sf ) const override {
+        bool intersect( const Ray& r, float * t_hit, Surfel *sf ) const override {
             Point3D origin_center_vec = r.getOrigin() - center;
             // B = (o - c) dot d
             float B = dot( Vec3( origin_center_vec.getX(), origin_center_vec.getY(), origin_center_vec.getZ()), r.getDirection() );
@@ -55,7 +55,7 @@ class Sphere: public Shape {
             return false;
         };
 
-        bool intersect_p( Ray r ) const override {
+        bool intersect_p( const Ray& r ) const override {
             Point3D origin_center_vec = r.getOrigin() - center;
             // B = (o - c) dot d
             float B = dot( Vec3( origin_center_vec.getX(), origin_center_vec.getY(), origin_center_vec.getZ()), r.getDirection() );

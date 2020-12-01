@@ -8,8 +8,8 @@
 class Shape {
     public:
         Shape(){ /* empty */ };
-        virtual bool intersect( Ray r, float * t_hit, Surfel *sf ) const = 0;
-		virtual bool intersect_p( Ray r ) const = 0;
+        virtual bool intersect( const Ray& r, float * t_hit, Surfel *sf ) const = 0;
+		virtual bool intersect_p( const Ray& r ) const = 0;
         virtual Bounds3 bounds() const = 0;
 };
 

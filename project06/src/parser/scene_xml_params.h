@@ -71,7 +71,7 @@ namespace ObjectParams {
 
 namespace ObjectTypes {
     const string SPHERE = "sphere";
-    const string TRIANGLEMESH = "triangleMesh";
+    const string TRIANGLEMESH = "trianglemesh";
 }
 
 namespace SphereParams {
@@ -107,16 +107,19 @@ namespace FilmParams {
 };
 
 namespace TriangleParams {
+    const string FILENAME = "filename";
     const string TYPE = "type";
     const string MATERIAL = "material";
     const string NTRIANGLES = "ntriangles";
     const string INDICES = "indices";
     const string VERTICES = "vertices";
     const string NORMALS = "normals";
-    const string UVs = "uvs";
+    const string UV = "uv";
     const string REVERSE_VERTEX_ORDER = "reverse_vertex_order";
     const string COMPUTE_NORMALS = "compute_normals";
     const string BACKFACE_CULL = "backface_cull";
+    // helper property
+    const string NUM_VERTICES = "NUM_VERTICES";
 };
 
 namespace BackgroundParams {

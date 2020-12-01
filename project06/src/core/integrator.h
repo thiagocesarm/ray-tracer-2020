@@ -15,9 +15,9 @@ class Integrator {
 
 class SamplerIntegrator : public Integrator {
 	protected:
-        Camera * camera;
+        shared_ptr<Camera> camera;
 	public:
-		SamplerIntegrator( Camera * cam ) : camera{ cam } {};
+		SamplerIntegrator( shared_ptr<Camera> cam ) : camera{ cam } {};
 
 		virtual Color Li( const Ray& ray, const Scene& scene, const Color bkg_color ) const = 0;
 		
@@ -57,7 +57,7 @@ class SamplerIntegrator : public Integrator {
 
 					Ray ray = camera->generate_ray( i, j );
 					Surfel isect;
-
+					
 					auto bkg_color = scene.background->sample( float(i)/float(w), float(j)/float(h) );
 					auto pixel_color = Li(ray, scene, bkg_color);
 

@@ -7,7 +7,7 @@
 
 class FlatIntegrator: public SamplerIntegrator {
     public:
-        FlatIntegrator(Camera * cam) : SamplerIntegrator(cam) { }
+        FlatIntegrator(shared_ptr<Camera> cam) : SamplerIntegrator(cam) { }
 
         Color Li(const Ray& ray, const Scene & scene, const Color bkg_color ) const override {
             Color L(0,0,0);

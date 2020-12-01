@@ -32,13 +32,13 @@ using namespace std;
 
 struct RenderOptions {
     LookAt lookAt;
-    Camera * camera;
-    Film film;
-    Background * background;
-    vector<Light *> lights; 
-    Integrator * integrator;
-    Material * material;
-    vector<Primitive *> objects;
+    shared_ptr<Camera> camera;
+    shared_ptr<Film> film;
+    shared_ptr<Background> background;
+    vector<shared_ptr<Light>> lights; 
+    shared_ptr<Integrator> integrator;
+    shared_ptr<Material> material;
+    vector<shared_ptr<Primitive>> objects;
 };
 
 RenderOptions ro;
@@ -74,10 +74,10 @@ void API::setCamera(ParamSet & ps) {
     auto fovy = ps.find<float>(CameraParams::FOVY, -1);
 
     if (type == CameraTypes::ORTHOGRAPHIC && screen_window != nullptr) { 
-        ro.camera = new OrthographicCamera(screen_window[0], screen_window[1], screen_window[2], screen_window[3]);
+        ro.camera = make_shared<OrthographicCamera>(screen_window[0], screen_window[1], screen_window[2], screen_window[3]);
         return;
     } else if (type == CameraTypes::PERSPECTIVE && fovy > -1) {
-        ro.camera = new PerspectiveCamera(fovy);
+        ro.camera = make_shared<PerspectiveCamera>(fovy);
         return;
     }
 }
@@ -94,7 +94,7 @@ void API::setLight(ParamSet & ps) {
 
     if (type == LightSourceTypesParams::AMBIENT && L != nullptr) {
         Vec3 vecL = Vec3(L[0], L[1], L[2]);
-        AmbientLight *al = new AmbientLight(vecL);
+        auto al = make_shared<AmbientLight>(vecL);
         al->setType("ambient");
         al->setFrom(vecL);
         ro.lights.push_back(al);
@@ -104,7 +104,7 @@ void API::setLight(ParamSet & ps) {
         Vec3 vecScale = Vec3(scale[0], scale[1], scale[2]);
         Vec3 vecFrom = Vec3(from[0], from[1], from[2]);
         Vec3 vecTo = Vec3(to[0], to[1], to[2]);
-        DirectionalLight *dl = new DirectionalLight(vecL, vecScale, vecFrom, vecTo);
+        auto dl = make_shared<DirectionalLight>(vecL, vecScale, vecFrom, vecTo);
         dl->setType("directional");
         dl->setFrom(vecFrom);
         ro.lights.push_back(dl);
@@ -113,7 +113,7 @@ void API::setLight(ParamSet & ps) {
         Vec3 vecI = Vec3(I[0], I[1], I[2]);
         Vec3 vecScale = Vec3(scale[0], scale[1], scale[2]);
         Vec3 vecFrom = Vec3(from[0], from[1], from[2]);
-        PointLight *pl = new PointLight(vecI, vecScale, vecFrom);
+        auto pl = make_shared<PointLight>(vecI, vecScale, vecFrom);
         pl->setType("point");
         pl->setFrom(vecFrom);
         ro.lights.push_back(pl);
@@ -123,7 +123,7 @@ void API::setLight(ParamSet & ps) {
         Vec3 vecScale = Vec3(scale[0], scale[1], scale[2]);
         Vec3 vecFrom = Vec3(from[0], from[1], from[2]);
         Vec3 vecTo = Vec3(to[0], to[1], to[2]);
-        SpotLight *sl = new SpotLight(vecI, vecScale, vecFrom, vecTo, cutoff, falloff);
+        auto sl = make_shared<SpotLight>(vecI, vecScale, vecFrom, vecTo, cutoff, falloff);
         sl->setType("spot");
         sl->setFrom(vecFrom);
         ro.lights.push_back(sl);
@@ -135,10 +135,10 @@ void API::setIntegrator(ParamSet & ps) {
     auto type = ps.find<string>(IntegratorParams::TYPE, IntegratorTypes::FLAT);
 
     if (type == IntegratorTypes::FLAT) {
-        ro.integrator = new FlatIntegrator(ro.camera);
+        ro.integrator = make_shared<FlatIntegrator>(ro.camera);
     } else if (type == IntegratorTypes::BLINN) {
         auto depth = ps.find<int>(IntegratorParams::DEPTH, 0);
-        ro.integrator = new BlinnPhongIntegrator(ro.camera, depth);
+        ro.integrator = make_shared<BlinnPhongIntegrator>(ro.camera, depth);
     }
 }
 
@@ -157,9 +157,9 @@ void API::setFilm(ParamSet & ps) {
         crop_window_vec[1] = crop_window[1];
         crop_window_vec[2] = crop_window[2];
         crop_window_vec[3] = crop_window[3];
-        ro.film = Film(type, xRes, yRes, filename, imgType, crop_window_vec);
+        ro.film = make_shared<Film>(type, xRes, yRes, filename, imgType, crop_window_vec);
     } else {
-        ro.film = Film(type, xRes, yRes, filename, imgType, nullptr);
+        ro.film = make_shared<Film>(type, xRes, yRes, filename, imgType, nullptr);
     }
 
 }
@@ -169,7 +169,7 @@ void API::setMaterial(ParamSet & ps) {
 
     if (type == MaterialTypes::FLAT) {
         auto color = ps.findArray<float>(FlatMaterialParams::COLOR);
-        ro.material = new FlatMaterial(Color(color[0],color[1],color[2]));
+        ro.material = make_shared<FlatMaterial>(Color(color[0],color[1],color[2]));
     } else if (type == MaterialTypes::BLINN_PHONG) {
         auto ambient = ps.findArray<float>(BlinnPhongMaterialParams::AMBIENT);
         auto diffuse = ps.findArray<float>(BlinnPhongMaterialParams::DIFFUSE);
@@ -177,7 +177,7 @@ void API::setMaterial(ParamSet & ps) {
         auto mirror = ps.findArray<float>(BlinnPhongMaterialParams::MIRROR);
         auto glossiness = ps.find<int>(BlinnPhongMaterialParams::GLOSSINESS, 0);
 
-        ro.material = new BlinnPhongMaterial (
+        ro.material = make_shared<BlinnPhongMaterial> (
             Vec3(ambient[0], ambient[1], ambient[2]),
             Vec3(diffuse[0], diffuse[1], diffuse[2]),
             Vec3(specular[0], specular[1], specular[2]),
@@ -194,23 +194,16 @@ void API::setObject(ParamSet & ps) {
         auto radius = ps.find<float>(SphereParams::RADIUS, 0.4);
         auto center = ps.findArray<float>(SphereParams::CENTER);
 
-        Shape * shape = new Sphere( radius, Point3D( center[0], center[1], center[2] ) );
-        ro.objects.push_back( new GeometricPrimitive(shape, ro.material) );
+        auto shape = make_shared<Sphere>( radius, Point3D( center[0], center[1], center[2] ) );
+        ro.objects.push_back( make_shared<GeometricPrimitive>(shape, ro.material) );
 
     } else if (type == ObjectTypes::TRIANGLEMESH) {
-        auto radius = ps.find<float>(SphereParams::RADIUS, 0.4);
-        auto center = ps.findArray<float>(SphereParams::CENTER);
-
-        auto bfc =  ps.find<bool>(TriangleParams::BACKFACE_CULL, false);
-        auto indices = ps.findArray<int>(TriangleParams::INDICES);
-        auto vertices = ps.findArray<float>(TriangleParams::VERTICES);
-        auto normals = ps.findArray<int>(TriangleParams::NORMALS);
-        auto uv = ps.findArray<int>(TriangleParams::UVs);
 
         auto mesh = create_triangle_mesh_shape(false, ps);
 
-        Shape * shape = new Triangle( mesh, 0, bfc);
-        ro.objects.push_back( new GeometricPrimitive(shape, ro.material) );
+        for (auto triangle : mesh) {
+            ro.objects.push_back( make_shared<GeometricPrimitive>(triangle, ro.material) );
+        }
     }
 }
 
@@ -219,7 +212,7 @@ void API::setBackground(ParamSet & ps) {
     auto type = ps.find<string>(BackgroundParams::TYPE, "colors");
     auto color = ps.findArray<int>(BackgroundParams::COLOR);
     if (color != nullptr) {
-        ro.background = new Background(Color(color[0], color[1], color[2]));
+        ro.background = make_shared<Background>(Color(color[0], color[1], color[2]));
     } else {
         const int defaultColor[3] = { 0, 0, 0 };
         auto mapping = ps.find<string>(BackgroundParams::MAPPING, "screen");
@@ -236,7 +229,7 @@ void API::setBackground(ParamSet & ps) {
         const int * brColors = ps.findArray<int>(BackgroundParams::BOTTOM_RIGHT);
         if (brColors == nullptr) { brColors = defaultColor; }
 
-        ro.background = new Background(
+        ro.background = make_shared<Background>(
             Color(blColors[0], blColors[1], blColors[2]),
             Color(tlColors[0], tlColors[1], tlColors[2]),
             Color(trColors[0], trColors[1], trColors[2]),
@@ -249,11 +242,17 @@ void API::setRayTracer(RT3 & rt3) {
     finishCameraSetup();
     rt3.camera = ro.camera;
     rt3.integrator = ro.integrator;
-    rt3.scene = new Scene( ro.background, shared_ptr<PrimList>( new PrimList(ro.objects) ), ro.lights, ro.objects );
+    for (auto ob : ro.objects) {
+        auto ray = Ray(Point3D(0,0,0), Vec3(0,0,0));
+        float t_hit = 1.0;
+        auto surfel = Surfel();
+        ob->intersect(ray, &surfel);
+    }
+    rt3.scene = make_shared<Scene>( ro.background, make_shared<PrimList>(ro.objects), ro.lights, ro.objects );
 }
 
 void API::finishCameraSetup() {
-    ro.camera->film = &ro.film;
+    ro.camera->film = ro.film;
     ro.camera->finishSetup();
     ro.camera->build_camera_frame(ro.lookAt.lookFrom, ro.lookAt.lookAt, ro.lookAt.up);
 }

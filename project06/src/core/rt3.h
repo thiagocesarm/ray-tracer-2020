@@ -8,9 +8,9 @@
 
 class RT3 {
     public:
-        Camera * camera;
-        Integrator * integrator;
-        Scene * scene;
+        shared_ptr<Camera> camera;
+        shared_ptr<Integrator> integrator;
+        shared_ptr<Scene> scene;
         
         void run() {
             integrator->render(*scene);

@@ -11,12 +11,12 @@ using namespace std;
 
 class Scene {
     public:
-        Background * background;
-        vector<Light *> lights;
+        shared_ptr<Background> background;
+        vector<shared_ptr<Light>> lights;
         shared_ptr<Primitive> aggregate;
-        vector<Primitive *> objects;
+        vector<shared_ptr<Primitive>> objects;
 
-        Scene( Background * bkg, shared_ptr<Primitive> ag, vector<Light *> lights, vector<Primitive *> objects)
+        Scene( shared_ptr<Background> bkg, shared_ptr<Primitive> ag, vector<shared_ptr<Light>> lights, vector<shared_ptr<Primitive>> objects)
              : background{ bkg }, aggregate{ ag }, lights{ lights }, objects {objects} { /* empty */ }
 
         bool intersect( const Ray& r, Surfel *isect ) const {
