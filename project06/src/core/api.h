@@ -198,7 +198,7 @@ void API::setObject(ParamSet & ps) {
         ro.objects.push_back( make_shared<GeometricPrimitive>(shape, ro.material) );
 
     } else if (type == ObjectTypes::TRIANGLEMESH) {
-
+        
         auto mesh = create_triangle_mesh_shape(false, ps);
 
         for (auto triangle : mesh) {

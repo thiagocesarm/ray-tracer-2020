@@ -93,8 +93,8 @@ class Triangle : public Shape {
                 Vec3 vecP = rayOrigin + ray.getDirection() * t;
                 *thit = t;
                 auto normal_v0 = (1 - u - v) * mesh->normals[n[0]];
-                auto normal_v1 = v * mesh->normals[n[1]];
-                auto normal_v2 = u * mesh->normals[n[2]];
+                auto normal_v1 = u * mesh->normals[n[1]];
+                auto normal_v2 = v * mesh->normals[n[2]];
                 isect->n = normal_v0 + normal_v1 + normal_v2;
                 Point3D p = Point3D {vecP.r(), vecP.g(), vecP.b()};
                 isect->p = p;
@@ -431,9 +431,11 @@ create_triangle_mesh_shape( bool flip_normals, ParamSet &ps )
             mesh->normal_indices.push_back(indices[i*3 + 1]);
             mesh->normal_indices.push_back(indices[i*3 + 2]);
 
-            mesh->uvcoord_indices.push_back(indices[i*3]);
-            mesh->uvcoord_indices.push_back(indices[i*3 + 1]);
-            mesh->uvcoord_indices.push_back(indices[i*3 + 2]);
+            if (uv != nullptr) {
+                mesh->uvcoord_indices.push_back(indices[i*3]);
+                mesh->uvcoord_indices.push_back(indices[i*3 + 1]);
+                mesh->uvcoord_indices.push_back(indices[i*3 + 2]);
+            }
         }
 
         std::vector<Vec3> vecVertices;
@@ -442,7 +444,7 @@ create_triangle_mesh_shape( bool flip_normals, ParamSet &ps )
         for (size_t i = 0; i < num_vertices; i++) {
             vecVertices.push_back(Vec3{vertices[i*3], vertices[i*3 + 1], vertices[i*3 + 2]});
             vecNormals.push_back(Vec3{normals[i*3], normals[i*3 + 1], normals[i*3 + 2]});
-            vecUv.push_back(Vec3{uv[i*2], uv[i*2 + 1], 0}); // UV only has 2 values
+            if (uv != nullptr) { vecUv.push_back(Vec3{uv[i*2], uv[i*2 + 1], 0}); } // UV only has 2 values
         }
 
         mesh->n_triangles = num_triangles;
