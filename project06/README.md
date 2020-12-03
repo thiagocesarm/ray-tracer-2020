@@ -6,5 +6,5 @@ Compile:
     g++ -std=c++11 -I src/ext src/ext/*.cpp src/main/main.cpp -o rtracer
 
 Execute:
-    ./rtracer scenes/flat_material.xml
-    ./rtracer scenes/flat_material_ortho.xml
+    ./rtracer scenes/teapot_persp.xml
+    ./rtracer scenes/teapot_ortho.xml
