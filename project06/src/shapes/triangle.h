@@ -69,25 +69,45 @@ class Triangle : public Shape {
             Vec3 vertex1 = mesh->vertices[v[1]];
             Vec3 vertex2 = mesh->vertices[v[2]];
             Vec3 edge1, edge2, h, s, q;
-            float a,f,u,v;
+            float a,f,t,u,v;
             edge1 = vertex1 - vertex0;
             edge2 = vertex2 - vertex0;
-            h = cross(ray.getDirection(), edge2);
+            // h = cross(ray.getDirection(), edge2);
+            h = cross(edge2, ray.getDirection());
             a = dot(edge1, h);
-            if (a > -EPSILON && a < EPSILON)
-                return false;    // This ray is parallel to this triangle.
-            f = 1.0/a;
             Vec3 rayOrigin = Vec3 {ray.getOrigin().getX(), ray.getOrigin().getY(), ray.getOrigin().getZ()};
-            s = rayOrigin - vertex0;
-            u = f * dot(s,h);
-            if (u < 0.0 || u > 1.0)
-                return false;
-            q = cross(s, edge1);
-            v = f * dot(ray.getDirection(), q);
-            if (v < 0.0 || u + v > 1.0)
-                return false;
-            // At this stage we can compute t to find out where the intersection point is on the line.
-            float t = f * dot(edge2, q);
+
+            if (backface_cull) {
+                if (a < EPSILON) { return false; }
+                auto tVec = rayOrigin - vertex0;
+                u = dot(tVec, h);
+                if (u < 0.0 || u > a) { return false; }
+                // auto qVec = cross(tVec, edge1);
+                auto qVec = cross(edge1, tVec);
+                v = dot(ray.getDirection(), qVec);
+                if (v < 0.0 || u + v > a) { return false; }
+
+                t = dot(edge2, qVec);
+                auto invDet = 1.0 / a;
+                t *= invDet;
+                u *= invDet;
+                v *= invDet;
+            } else {
+                if (a > -EPSILON && a < EPSILON)
+                    return false;    // This ray is parallel to this triangle.
+                f = 1.0/a;
+                s = rayOrigin - vertex0;
+                u = f * dot(s,h);
+                if (u < 0.0 || u > 1.0)
+                    return false;
+                // q = cross(s, edge1);
+                q = cross(edge1, s);
+                v = f * dot(ray.getDirection(), q);
+                if (v < 0.0 || u + v > 1.0)
+                    return false;
+                // At this stage we can compute t to find out where the intersection point is on the line.
+                t = f * dot(edge2, q);
+            }
             if (t > EPSILON && ray.min_t < t && t < ray.max_t) // ray intersection
             {
                 Vec3 vecP = rayOrigin + ray.getDirection() * t;
@@ -101,34 +121,54 @@ class Triangle : public Shape {
                 return true;
             }
             else // This means that there is a line intersection but not a ray intersection.
-                return false; 
+                return false;
         }
 
 		bool intersect_p( const Ray& ray ) const override { 
             const float EPSILON = 0.01;
             Vec3 vertex0 = mesh->vertices[v[0]];
-            Vec3 vertex1 = mesh->vertices[v[1]];  
+            Vec3 vertex1 = mesh->vertices[v[1]];
             Vec3 vertex2 = mesh->vertices[v[2]];
             Vec3 edge1, edge2, h, s, q;
-            float a,f,u,v;
+            float a,f,t,u,v;
             edge1 = vertex1 - vertex0;
             edge2 = vertex2 - vertex0;
-            h = cross(ray.getDirection(), edge2);
+            // h = cross(ray.getDirection(), edge2);
+            h = cross(edge2, ray.getDirection());
             a = dot(edge1, h);
-            if (a > -EPSILON && a < EPSILON)
-                return false;    // This ray is parallel to this triangle.
-            f = 1.0/a;
             Vec3 rayOrigin = Vec3 {ray.getOrigin().getX(), ray.getOrigin().getY(), ray.getOrigin().getZ()};
-            s = rayOrigin - vertex0;
-            u = f * dot(s,h);
-            if (u < 0.0 || u > 1.0)
-                return false;
-            q = cross(s, edge1);
-            v = f * dot(ray.getDirection(), q);
-            if (v < 0.0 || u + v > 1.0)
-                return false;
-            // At this stage we can compute t to find out where the intersection point is on the line.
-            float t = f * dot(edge2, q);
+
+            if (backface_cull) {
+                if (a < EPSILON) { return false; }
+                auto tVec = rayOrigin - vertex0;
+                u = dot(tVec, h);
+                if (u < 0.0 || u > a) { return false; }
+                // auto qVec = cross(tVec, edge1);
+                auto qVec = cross(edge1, tVec);
+                v = dot(ray.getDirection(), qVec);
+                if (v < 0.0 || u + v > a) { return false; }
+
+                t = dot(edge2, qVec);
+                auto invDet = 1.0 / a;
+                t *= invDet;
+                u *= invDet;
+                v *= invDet;
+            } else {
+                if (a > -EPSILON && a < EPSILON)
+                    return false;    // This ray is parallel to this triangle.
+                f = 1.0/a;
+                s = rayOrigin - vertex0;
+                u = f * dot(s,h);
+                if (u < 0.0 || u > 1.0)
+                    return false;
+                // q = cross(s, edge1);
+                q = cross(edge1, s);
+                v = f * dot(ray.getDirection(), q);
+                if (v < 0.0 || u + v > 1.0)
+                    return false;
+                // At this stage we can compute t to find out where the intersection point is on the line.
+                t = f * dot(edge2, q);
+            }
             return (t > EPSILON && ray.min_t < t && t < ray.max_t);
         }
 
