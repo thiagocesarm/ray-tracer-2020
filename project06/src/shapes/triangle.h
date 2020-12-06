@@ -413,7 +413,7 @@ bool load_mesh_data( const std::string & filename, bool rvo, bool cn, bool fn, s
 vector< shared_ptr<Shape> >
 create_triangle_mesh_shape( bool flip_normals, ParamSet &ps )
 {
-    bool bkfc_on{true};                 // Controls whether the backface cull should be done or not.
+    bool bkfc_on{false};                 // Controls whether the backface cull should be done or not.
     bool reverse_vertex_order{false};   // If this is true, we store vertices in reverse order inside the mesh.
     bool compute_normals{false};        // Indicate whether we need to calculate the triangle's normals manually.
 
@@ -426,8 +426,8 @@ create_triangle_mesh_shape( bool flip_normals, ParamSet &ps )
     string filename = ps.find<string>(TriangleParams::FILENAME, ""); // Retrieving data associated with 'filename' attrib.
     // Retrieve backface ON/OFF
     string bkf_on_str = ps.find<string>(TriangleParams::BACKFACE_CULL, "");
-    if ( bkf_on_str == "off" or bkf_on_str == "false" )
-        bkfc_on = false;
+    if ( bkf_on_str == "on" or bkf_on_str == "true" )
+        bkfc_on = true;
     // Retrieve Reverse vertex order ON/OFF
     string rvo_str = ps.find<string>(TriangleParams::REVERSE_VERTEX_ORDER, "");
     if ( rvo_str == "on" or rvo_str == "true" )
