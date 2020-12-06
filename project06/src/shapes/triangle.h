@@ -72,7 +72,6 @@ class Triangle : public Shape {
             float a,f,t,u,v;
             edge1 = vertex1 - vertex0;
             edge2 = vertex2 - vertex0;
-            // h = cross(ray.getDirection(), edge2);
             h = cross(edge2, ray.getDirection());
             a = dot(edge1, h);
             Vec3 rayOrigin = Vec3 {ray.getOrigin().getX(), ray.getOrigin().getY(), ray.getOrigin().getZ()};
@@ -82,7 +81,6 @@ class Triangle : public Shape {
                 auto tVec = rayOrigin - vertex0;
                 u = dot(tVec, h);
                 if (u < 0.0 || u > a) { return false; }
-                // auto qVec = cross(tVec, edge1);
                 auto qVec = cross(edge1, tVec);
                 v = dot(ray.getDirection(), qVec);
                 if (v < 0.0 || u + v > a) { return false; }
@@ -100,7 +98,6 @@ class Triangle : public Shape {
                 u = f * dot(s,h);
                 if (u < 0.0 || u > 1.0)
                     return false;
-                // q = cross(s, edge1);
                 q = cross(edge1, s);
                 v = f * dot(ray.getDirection(), q);
                 if (v < 0.0 || u + v > 1.0)
@@ -110,14 +107,12 @@ class Triangle : public Shape {
             }
             if (t > EPSILON && ray.min_t < t && t < ray.max_t) // ray intersection
             {
-                Vec3 vecP = rayOrigin + ray.getDirection() * t;
                 *thit = t;
                 auto normal_v0 = (1 - u - v) * mesh->normals[n[0]];
                 auto normal_v1 = u * mesh->normals[n[1]];
                 auto normal_v2 = v * mesh->normals[n[2]];
                 isect->n = normal_v0 + normal_v1 + normal_v2;
-                Point3D p = Point3D {vecP.r(), vecP.g(), vecP.b()};
-                isect->p = p;
+                isect->p = ray(t);
                 return true;
             }
             else // This means that there is a line intersection but not a ray intersection.
@@ -133,7 +128,6 @@ class Triangle : public Shape {
             float a,f,t,u,v;
             edge1 = vertex1 - vertex0;
             edge2 = vertex2 - vertex0;
-            // h = cross(ray.getDirection(), edge2);
             h = cross(edge2, ray.getDirection());
             a = dot(edge1, h);
             Vec3 rayOrigin = Vec3 {ray.getOrigin().getX(), ray.getOrigin().getY(), ray.getOrigin().getZ()};
@@ -143,7 +137,6 @@ class Triangle : public Shape {
                 auto tVec = rayOrigin - vertex0;
                 u = dot(tVec, h);
                 if (u < 0.0 || u > a) { return false; }
-                // auto qVec = cross(tVec, edge1);
                 auto qVec = cross(edge1, tVec);
                 v = dot(ray.getDirection(), qVec);
                 if (v < 0.0 || u + v > a) { return false; }
@@ -161,7 +154,6 @@ class Triangle : public Shape {
                 u = f * dot(s,h);
                 if (u < 0.0 || u > 1.0)
                     return false;
-                // q = cross(s, edge1);
                 q = cross(edge1, s);
                 v = f * dot(ray.getDirection(), q);
                 if (v < 0.0 || u + v > 1.0)
