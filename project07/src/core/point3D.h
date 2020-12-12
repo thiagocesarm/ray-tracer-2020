@@ -18,6 +18,16 @@ class Point3D {
         float getX() const { return this->x; }
         float getY() const { return this->y; }
         float getZ() const { return this->z; }
+        float operator[] (int index) const {
+            if (index == 0) {
+                return x;
+            } else if (index == 1) {
+                return y;
+            } else if (index == 2) { 
+                return z;
+            }
+            return 0;
+        }
 };
 
 inline Point3D operator-(const Point3D &p1, const Point3D &p2) { return Point3D(p1.getX() - p2.getX(), p1.getY() - p2.getY(), p1.getZ()  - p2.getZ());}

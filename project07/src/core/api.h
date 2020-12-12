@@ -248,7 +248,8 @@ void API::setRayTracer(RT3 & rt3) {
         auto surfel = Surfel();
         ob->intersect(ray, &surfel);
     }
-    rt3.scene = make_shared<Scene>( ro.background, make_shared<PrimList>(ro.objects), ro.lights, ro.objects );
+    rt3.scene = make_shared<Scene>( ro.background, make_shared<BVHAccel>(ro.objects), ro.lights, ro.objects );
+    // rt3.scene = make_shared<Scene>( ro.background, make_shared<PrimList>(ro.objects), ro.lights, ro.objects );
 }
 
 void API::finishCameraSetup() {

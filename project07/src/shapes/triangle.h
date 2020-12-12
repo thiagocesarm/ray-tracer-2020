@@ -164,7 +164,15 @@ class Triangle : public Shape {
             return (t > EPSILON && ray.min_t < t && t < ray.max_t);
         }
 
-        Bounds3 bounds() const override { return Bounds3(Point3D{0,0,0}, Point3D{0,0,0}); }
+        Bounds3 bounds() const override { 
+            auto point_v0 = Point3D(mesh->vertices[v[0]].x(), mesh->vertices[v[0]].y(), mesh->vertices[v[0]].z());
+            auto point_v1 = Point3D(mesh->vertices[v[1]].x(), mesh->vertices[v[1]].y(), mesh->vertices[v[1]].z());
+            auto point_v2 = Point3D(mesh->vertices[v[2]].x(), mesh->vertices[v[2]].y(), mesh->vertices[v[2]].z());
+
+            auto bounds = Bounds3(point_v0, point_v1);
+            bounds.Union(point_v2);
+            return bounds;
+        }
 
         /// This friend function helps us debug the triangles, if we want to.
         friend std::ostream& operator<<( std::ostream& os, const Triangle & t );
