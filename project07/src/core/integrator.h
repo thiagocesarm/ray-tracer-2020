@@ -32,10 +32,8 @@ class SamplerIntegrator : public Integrator {
 			int progress = 0;
 			int percentil = 1;
 
-			cout << ">>> Start RAY TRACER" << endl;
-			cout << ">>> " << endl;
-			cout << ">>> RENDERING SCENE progress" << endl;
-			cout << ">>> " << endl;
+			cout << ">>> Start RAY TRACER" << endl << endl;
+			cout << ">>> RENDERING SCENE progress" << endl << endl;
 
 			for (int j = h - 1; j >= 0 ; j--) {
 				for (int i = 0 ; i < w ; i++) {

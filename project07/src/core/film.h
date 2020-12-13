@@ -73,9 +73,7 @@ void Film::printToFile() {
     int total_steps = width * height;
     int progress = 0;
     int percentil = 1;
-    cout << ">>> " << endl;
-    cout << ">>> PREPARE OUTPUT FILE progress" << endl;
-    cout << ">>> " << endl;
+    cout << endl << ">>> PREPARE OUTPUT FILE progress" << endl << endl;
 
     if (imgType == "ppm") {
         std::ofstream outfile;

@@ -89,7 +89,11 @@ class BVHAccel: public AggregatePrimitive {
     public:
         BVHAccel(vector<shared_ptr<Primitive>> prims) {
             cout << ">>> CONSTRUCTING BVH ACCELERATION STRUCTURE\n";
+            auto t1 = std::chrono::high_resolution_clock::now();
             root = make_shared<BVHNode>(prims, 0, prims.size());
+            auto t2 = std::chrono::high_resolution_clock::now();
+            auto duration = std::chrono::duration_cast<std::chrono::milliseconds>( t2 - t1 ).count();
+            cout << ">>> " << duration << " ms \n";
             cout << ">>> FINISHED CONSTRUCTING BVH ACCELERATION STRUCTURE\n\n";
         };
 
