@@ -213,6 +213,12 @@ void Parser::processTag(XMLElement * currentNode) {
         currentParamSet->add<int>(IntegratorParams::DEPTH, move(depth), 1);
 
         API::setIntegrator(*currentParamSet);
+    } else if (tag == SceneTags::ACCELERATOR) {
+        unique_ptr<string[]> type{ new string[1] };
+        type[0] = currentNode->Attribute(AcceleratorParams::TYPE.c_str());
+        currentParamSet->add<string>(AcceleratorParams::TYPE, move(type), 1);
+
+        API::setAccelerator(*currentParamSet);
     } else if (tag == SceneTags::MATERIAL) {
         unique_ptr<string[]> type{ new string[1] };
         type[0] = currentNode->Attribute(MaterialParams::TYPE.c_str());

@@ -87,7 +87,11 @@ class BVHAccel: public AggregatePrimitive {
         shared_ptr<BVHNode> root;
     
     public:
-        BVHAccel(vector<shared_ptr<Primitive>> prims) : root { make_shared<BVHNode>(prims, 0, prims.size()) }{};
+        BVHAccel(vector<shared_ptr<Primitive>> prims) {
+            cout << ">>> CONSTRUCTING BVH ACCELERATION STRUCTURE\n";
+            root = make_shared<BVHNode>(prims, 0, prims.size());
+            cout << ">>> FINISHED CONSTRUCTING BVH ACCELERATION STRUCTURE\n\n";
+        };
 
         bool intersect( const Ray& r, Surfel *sf ) const override {
             return root->intersect(r, sf);

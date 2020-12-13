@@ -11,6 +11,7 @@ namespace SceneTags {
     const string WORLD_END = "world_end";
     const string LOOK_AT = "lookat";
     const string INTEGRATOR = "integrator";
+    const string ACCELERATOR = "accelerator";
     const string MATERIAL = "material";
     const string OBJECT = "object";
 };
@@ -23,6 +24,15 @@ namespace IntegratorParams {
 namespace IntegratorTypes {
     const string FLAT = "flat";
     const string BLINN = "blinn_phong";
+};
+
+namespace AcceleratorParams {
+    const string TYPE = "type";
+};
+
+namespace AcceleratorTypes {
+    const string BVH = "bvh";
+    const string PRIM_LIST = "primlist";
 };
 
 namespace LightSourceParams {

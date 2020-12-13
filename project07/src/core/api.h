@@ -3,6 +3,7 @@
 
 #include "../cameras/orthographic.h"
 #include "../cameras/perspective.h"
+#include "../core/accelerator.h"
 #include "../core/background.h"
 #include "../core/camera.h"
 #include "../core/film.h"
@@ -32,6 +33,7 @@
 using namespace std;
 
 struct RenderOptions {
+    Accelerator accelerator;
     LookAt lookAt;
     shared_ptr<Camera> camera;
     shared_ptr<Film> film;
@@ -55,6 +57,7 @@ class API {
         static void setObject(ParamSet & ps);
         static void setMaterial(ParamSet & ps);
         static void setIntegrator(ParamSet & ps);
+        static void setAccelerator(ParamSet & ps);
         static void setLight(ParamSet & ps);
         static void setRayTracer(RT3 & rt3);
 };
@@ -140,6 +143,16 @@ void API::setIntegrator(ParamSet & ps) {
     } else if (type == IntegratorTypes::BLINN) {
         auto depth = ps.find<int>(IntegratorParams::DEPTH, 0);
         ro.integrator = make_shared<BlinnPhongIntegrator>(ro.camera, depth);
+    }
+}
+
+void API::setAccelerator(ParamSet & ps) { 
+    auto type = ps.find<string>(AcceleratorParams::TYPE, AcceleratorTypes::PRIM_LIST);
+
+    if (type == AcceleratorTypes::BVH) {
+        ro.accelerator = Accelerator(accelerator_type_e::bvh);
+    } else {
+        ro.accelerator = Accelerator(accelerator_type_e::primlist);
     }
 }
 
@@ -249,8 +262,12 @@ void API::setRayTracer(RT3 & rt3) {
         auto surfel = Surfel();
         ob->intersect(ray, &surfel);
     }
-    rt3.scene = make_shared<Scene>( ro.background, make_shared<BVHAccel>(ro.objects), ro.lights, ro.objects );
-    // rt3.scene = make_shared<Scene>( ro.background, make_shared<PrimList>(ro.objects), ro.lights, ro.objects );
+
+    if (ro.accelerator.type == accelerator_type_e::bvh) {
+        ro.objects = vector<shared_ptr<Primitive>>{ make_shared<BVHAccel>(ro.objects) };
+    }
+    
+    rt3.scene = make_shared<Scene>( ro.background, make_shared<PrimList>(ro.objects), ro.lights, ro.objects );
 }
 
 void API::finishCameraSetup() {
