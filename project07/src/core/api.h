@@ -21,6 +21,7 @@
 #include "../parser/scene_xml_params.h"
 #include "../primitives/aggregate.h"
 #include "../primitives/geometric_primitive.h"
+#include "../primitives/bvh.h"
 #include "../shapes/sphere.h"
 #include "../shapes/triangle.h"
 #include "../lights/ambient_light.h"
