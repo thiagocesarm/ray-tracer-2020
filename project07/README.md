@@ -8,3 +8,4 @@ Compile:
 Execute:
     ./rtracer scenes/teapot_persp.xml
     ./rtracer scenes/teapot_ortho.xml
+    ./rtracer scenes/table.xml
